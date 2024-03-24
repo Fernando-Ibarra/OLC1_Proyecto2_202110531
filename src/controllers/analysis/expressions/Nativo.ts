@@ -11,4 +11,5 @@ export class Nativo extends Instruction {
     interpret(tree: Tree, table: SymbolTable) {
         return this.value;
     }
+    
 }
