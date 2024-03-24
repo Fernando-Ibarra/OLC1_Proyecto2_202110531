@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.typeData = exports.TypeD = void 0;
+exports.typeData = void 0;
 class TypeD {
     constructor(typeDa) {
         this.typeDa = typeDa;
@@ -14,7 +14,7 @@ class TypeD {
         this.typeDa = typeDa;
     }
 }
-exports.TypeD = TypeD;
+exports.default = TypeD;
 // Tipos de datos aceptados por el lenguaje
 var typeData;
 (function (typeData) {

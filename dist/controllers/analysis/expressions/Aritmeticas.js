@@ -1,10 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ArithmeticOption = exports.Aritmeticas = void 0;
+exports.ArithmeticOption = void 0;
 const __1 = require("../");
+const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class Aritmeticas extends __1.Instruction {
     constructor(operator, row, column, leftOperand, rightOperand) {
-        super(new __1.TypeD(__1.typeData.INT), row, column);
+        super(new TypeD_1.default(__1.typeData.INT), row, column);
         this.operator = operator;
         if (!rightOperand) {
             this.uniqueOperand = leftOperand;
@@ -55,19 +59,19 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) + parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) + parseInt((rightOp ? 1 : 0).toString());
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) + parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
                         return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
@@ -75,19 +79,19 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) + parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) + parseFloat((rightOp ? 1 : 0).toString());
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) + parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
                         return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
@@ -95,17 +99,17 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt((leftOp ? 1 : 0).toString()) + parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat((leftOp ? 1 : 0).toString()) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         return new __1.Error('Semantico', `No se puede realizar la suma entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
                         return new __1.Error('Semantico', `No se puede realizar la suma entre un valor booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return (leftOp ? 'true' : 'false') + rightOp;
                     default:
                         return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
@@ -113,18 +117,18 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp.charCodeAt(0).toString()) + parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         return new __1.Error('Semantico', `No se puede realizar la suma entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     case __1.typeData.STRING:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
                         return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
@@ -132,19 +136,19 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     case __1.typeData.BOOL:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + (rightOp ? 'true' : 'false');
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     case __1.typeData.STRING:
-                        this.typeData = new __1.TypeD(__1.typeData.STRING);
+                        this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
                         return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
@@ -161,16 +165,16 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) - parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) - parseInt((rightOp ? 1 : 0).toString());
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) - parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         return new __1.Error('Semantico', `No se puede realizar la resta entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -180,16 +184,16 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat((rightOp ? 1 : 0).toString());
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         return new __1.Error('Semantico', `No se puede realizar la resta entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -199,10 +203,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt((leftOp ? 1 : 0).toString()) - parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat((leftOp ? 1 : 0).toString()) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         return new __1.Error('Semantico', `No se puede realizar la resta entre valores booleanos`, this.row, this.column);
@@ -216,10 +220,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp.charCodeAt(0).toString()) - parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         return new __1.Error('Semantico', `No se puede realizar la resta entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
@@ -257,15 +261,15 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) * parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) * parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         new __1.Error('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -275,15 +279,15 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         new __1.Error('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -308,10 +312,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp.charCodeAt(0).toString()) * parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la multiplicación entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -349,15 +353,15 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         new __1.Error('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -367,15 +371,15 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         new __1.Error('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
@@ -400,10 +404,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) / parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -441,10 +445,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseInt(leftOp) % parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) % parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -458,10 +462,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) % parseFloat(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) % parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -529,10 +533,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.INT);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return Math.pow(parseInt(leftOp), parseInt(rightOp));
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return Math.pow(parseInt(leftOp), parseFloat(rightOp));
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -546,10 +550,10 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return Math.pow(parseFloat(leftOp), parseInt(rightOp));
                     case __1.typeData.FLOAT:
-                        this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return Math.pow(parseFloat(leftOp), parseFloat(rightOp));
                     case __1.typeData.BOOL:
                         new __1.Error('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
@@ -614,10 +618,10 @@ class Aritmeticas extends __1.Instruction {
         let op = (_a = this.uniqueOperand) === null || _a === void 0 ? void 0 : _a.typeData.getTypeData();
         switch (op) {
             case __1.typeData.INT:
-                this.typeData = new __1.TypeD(__1.typeData.INT);
+                this.typeData = new TypeD_1.default(__1.typeData.INT);
                 return -parseInt(operand);
             case __1.typeData.FLOAT:
-                this.typeData = new __1.TypeD(__1.typeData.FLOAT);
+                this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                 return -parseFloat(operand);
             case __1.typeData.BOOL:
                 return new __1.Error('Semantico', `No se puede realizar la negación de un valor booleano`, this.row, this.column);
@@ -630,7 +634,7 @@ class Aritmeticas extends __1.Instruction {
         }
     }
 }
-exports.Aritmeticas = Aritmeticas;
+exports.default = Aritmeticas;
 var ArithmeticOption;
 (function (ArithmeticOption) {
     ArithmeticOption[ArithmeticOption["PLUS"] = 0] = "PLUS";

@@ -1,6 +1,7 @@
-import { SymbolTable, Tree, TypeD, Instruction, Error, typeData } from '../';
+import { SymbolTable, Tree, Instruction, Error, typeData } from '../';
+import TypeD from '../symbols/TypeD';
 
-export class Aritmeticas extends Instruction {
+export default class Aritmeticas extends Instruction {
     private leftOperand: Instruction | undefined;
     private rightOperand: Instruction | undefined;
     private operator: ArithmeticOption;

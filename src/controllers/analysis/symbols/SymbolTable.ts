@@ -1,4 +1,5 @@
-import { TypeD, typeData, Symbol } from './';
+import { typeData, Symbol } from './';
+import TypeD from '../symbols/TypeD';
 
 export class SymbolTable {
 

@@ -1,4 +1,4 @@
-export class TypeD {
+export default class TypeD {
     private typeDa: typeData;
 
     constructor(typeDa: typeData) {

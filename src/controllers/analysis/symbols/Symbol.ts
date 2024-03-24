@@ -1,4 +1,4 @@
-import { TypeD } from './';
+import TypeD from '../symbols/TypeD';
 
 export class Symbol {
     private type: TypeD;

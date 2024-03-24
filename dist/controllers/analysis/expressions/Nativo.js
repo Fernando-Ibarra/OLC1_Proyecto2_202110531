@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Nativo = void 0;
 const __1 = require("..");
 class Nativo extends __1.Instruction {
     constructor(type, value, line, column) {
@@ -11,4 +10,4 @@ class Nativo extends __1.Instruction {
         return this.value;
     }
 }
-exports.Nativo = Nativo;
+exports.default = Nativo;

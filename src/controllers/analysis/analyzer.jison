@@ -1,7 +1,7 @@
 %{
-    const TypeD = require('./');
-    const Aritmeticas = require('./');
-    const Nativo = require('./');
+    const TypeD = require('./symbols/TypeD');
+    const Aritmeticas = require('./expressions/Aritmeticas');
+    const Nativo = require('./expressions/Nativo');
 %}
 
 // Lexical analysis
@@ -41,7 +41,8 @@
 /lex
 
 // precedence
-%left 'PLUS' 'MINUS' 'TIMES' 'DIVIDE'
+%left 'PLUS' 'MINUS'
+%left 'TIMES' 'DIVIDE'
 %right UMINUS
 
 
@@ -63,7 +64,7 @@ INSTRUCTION: EXPRESSION SEMICOLON           { $$ = $1; }
 EXPRESSION: EXPRESSION PLUS EXPRESSION      { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.PLUS, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION MINUS EXPRESSION     { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.MINUS, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION TIMES EXPRESSION     { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.TIMES, @1.first_line, @1.first_column, $1, $3);}
-          | EXPRESSION DIVIDE EXPRESSION    { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.DIVIDE, @1.first_line, @1.first_column, $1, $3);}
+          | EXPRESSION DIVIDE EXPRESSION    { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.DIV, @1.first_line, @1.first_column, $1, $3);}
           | LPAREN EXPRESSION RPAREN        { $$ = $2; }
           | MINUS EXPRESSION %prec UMINUS   { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.NEGATIVE, @1.first_line, @1.first_column, $2); }
           | INTEGER                         { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.INT), $1, @1.first_line, @1.first_column); }

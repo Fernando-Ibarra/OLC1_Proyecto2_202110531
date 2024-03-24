@@ -1,6 +1,7 @@
-import { SymbolTable, Tree, TypeD, Instruction, Error, typeData } from '..';
+import { SymbolTable, Tree, Instruction, Error, typeData } from '..';
+import TypeD from '../symbols/TypeD';
 
-export class Nativo extends Instruction {
+export default class Nativo extends Instruction {
     value: any;
 
     constructor( type: TypeD, value: any, line: number, column: number){

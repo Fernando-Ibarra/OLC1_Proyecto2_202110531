@@ -1,4 +1,5 @@
-import { SymbolTable, Tree, TypeD} from '../';
+import { SymbolTable, Tree } from '../';
+import TypeD from '../symbols/TypeD';
 
 export abstract class Instruction {
     public typeData: TypeD;
