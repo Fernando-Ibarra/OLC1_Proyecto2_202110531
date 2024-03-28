@@ -1,14 +1,22 @@
-import { Grid, TextareaAutosize, Typography } from '@mui/material';
+import { useEffect, useRef } from 'react';
+import { Grid, Typography } from '@mui/material';
+import Editor from '@monaco-editor/react';
+
+
 import { useCompiler } from '../../hooks';
-import { useEffect } from 'react';
 
 export const Console = () => {
 
+    const editorRef = useRef(null);
     const { output } = useCompiler();
 
     useEffect(() => {
 
     }, [output])
+
+    const handleEditorDidMount = (editor) => {
+        editorRef.current = editor;
+    }
 
     return (
         <Grid container
@@ -29,30 +37,15 @@ export const Console = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <TextareaAutosize 
-                    disabled
+                <Editor
+                    defaultLanguage="cpp"
+                    language="cpp"
+                    defaultValue={output}
                     value={output}
-                    minRows={3}
-                    style={{ 
-                        width: '100%', 
-                        backgroundColor: '#797979',
-                        border: '1px solid #797979',
-                        color: '#FFFFFF',
-                        '&:hover': {
-                            borderColor: '#6082B6',
-                            color: '#FFFFFF',
-                        },
-                        '&:focus': {
-                            borderColor: '#6082B6',
-                            color: '#FFFFFF',
-                        },
-                        '&:active': {
-                            borderColor: '#6082B6',
-                            color: '#FFFFFF',
-                        },
-                        resize: 'none',
-                        height: '100%'
-                    }}
+                    onMount={handleEditorDidMount}
+                    height="90vh"
+                    width="100%"
+                    theme='vs-dark'
                 />
             </Grid>
 

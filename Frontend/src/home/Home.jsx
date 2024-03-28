@@ -55,7 +55,7 @@ export const Home = () => {
         <Grid container
             columns={12}
             sx={{
-                height: '100vh',
+                height: '100%',
             }}
         >
             <Grid item xs={12}

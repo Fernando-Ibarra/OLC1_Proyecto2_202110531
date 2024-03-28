@@ -43,6 +43,8 @@ export default class Aritmeticas extends Instruction {
                 return this.mod(leftOp, rightOp);
             case ArithmeticOption.POWER:
                 return this.power(leftOp, rightOp);
+            case ArithmeticOption.NEGATIVE:
+                return this.negative(uniqueOp);
             default:
                 return new Error('Semantico', `Operador aritmetico invalido`, this.row, this.column);
         }

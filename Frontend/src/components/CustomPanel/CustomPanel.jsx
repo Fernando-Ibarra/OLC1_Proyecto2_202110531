@@ -1,18 +1,25 @@
-import { TextareaAutosize } from '@mui/material';
+import { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import Editor from '@monaco-editor/react';
+
 import { useCompiler } from '../../hooks';
 
 
 export const CustomPanel = (props) => {
     const { value, index, content, ...other } = props;
+
+    const editorRef = useRef(null);
     const [codeView, setCodeView] = useState(content)
 
     const { setActiveCode } = useCompiler();
 
-    const handleChangeCode = (event) => {
-        setCodeView(event.target.value)
-        setActiveCode(event.target.value)
+    const handleChangeCode = () => {
+        setCodeView(editorRef.current?.getValue())
+        setActiveCode(editorRef.current?.getValue())
+    }
+
+    const handleEditorDidMount = (editor) => {
+        editorRef.current = editor;
     }
 
     return (
@@ -24,27 +31,17 @@ export const CustomPanel = (props) => {
             {...other}
         >
             {value === index && (
-                <TextareaAutosize
-                    minRows={10}
+                <Editor
+                    defaultLanguage="cpp"
+                    language="cpp"
+                    defaultValue={content}
                     value={codeView}
-                    style={{ 
-                        width: '100%',
-                        backgroundColor: '#797979', 
-                        border: '1ps solid #797979',
-                        color: '#FFFFFF',
-                        '&:hover': {
-                            border: '1ps solid #797979',
-                        },
-                        '&:focus': {
-                            border: '1ps solid #797979',
-                        },
-                        '&:active': {
-                            border: '1ps solid #797979',
-                        },
-                        resize: 'none',
-
-                    }}
+                    onMount={handleEditorDidMount}
+                    height="90vh"
+                    width="100%"
                     onChange={handleChangeCode}
+                    theme='vs-dark'
+                    
                 />
             )}          
         </div>
