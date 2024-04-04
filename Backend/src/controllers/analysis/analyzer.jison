@@ -104,15 +104,15 @@
 /lex
 
 // precedence
+%left 'OR'
+%left 'AND'
+%left 'NOT'
+%left 'EQUALS' 'LESS' 'LESS_EQUAL' 'GREATER' 'GREATER_EQUAL' 'DIFFERENT' 
 %left 'PLUS' 'MINUS'
-%left 'TIMES' 'DIVIDE'
-%left 'MOD' 'EQUALS'
-%left 'LESS' 'LESS_EQUAL'
-%left 'GREATER' 'GREATER_EQUAL'
-%left 'OR' 'AND'
-%left 'DIFFERENT'
+%left 'DIVIDE' 'TIMES' 'MOD'
 %nonassoc 'POW'
-%right 'UMINUS' 'NOT'
+%right 'UMINUS' 
+
 
 
 // start symbol
@@ -147,14 +147,14 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | EXPRESSION LESS_EQUAL EXPRESSION                { $$ = new Relacionales.default(Relacionales.RelationalOption.LESS_EQUAL, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION GREATER EXPRESSION                   { $$ = new Relacionales.default(Relacionales.RelationalOption.GREATER, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION GREATER_EQUAL EXPRESSION             { $$ = new Relacionales.default(Relacionales.RelationalOption.GREATER_EQUAL, @1.first_line, @1.first_column, $1, $3);}
-          | EXPRESSION OR EXPRESSION                        { $$ = new Logicas.default(Logicas.RelationalOption.OR, @1.first_line, @1.first_column, $1, $3);}
-          | EXPRESSION AND EXPRESSION                       { $$ = new Logicas.default(Logicas.RelationalOption.AND, @1.first_line, @1.first_column, $1, $3);}
-          | NOT EXPRESSION                                  { $$ = new Logicas.default(Logicas.RelationalOption.NOT, @1.first_line, @1.first_column, $2);}
+          | EXPRESSION OR EXPRESSION                        { $$ = new Logicas.default(Logicas.LogicasOption.OR, @1.first_line, @1.first_column, $1, $3);}
+          | EXPRESSION AND EXPRESSION                       { $$ = new Logicas.default(Logicas.LogicasOption.AND, @1.first_line, @1.first_column, $1, $3);}
+          | NOT EXPRESSION                                  { $$ = new Logicas.default(Logicas.LogicasOption.NOT, @1.first_line, @1.first_column, $2);}
           | LPAREN EXPRESSION RPAREN                        { $$ = $2; }
           | INTEGER                                         { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.INT), $1, @1.first_line, @1.first_column); }
           | FLOAT                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.FLOAT), $1, @1.first_line, @1.first_column); }
           | STRING                                          { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.STRING), $1, @1.first_line, @1.first_column);}
-          | TRUE                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOLEAN), $1, @1.first_line, @1.first_column); }
-          | FALSE                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOLEAN), $1, @1.first_line, @1.first_column); }
+          | TRUE                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOL), $1, @1.first_line, @1.first_column); }
+          | FALSE                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOL), $1, @1.first_line, @1.first_column); }
           | CHAR                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.CHAR), $1, @1.first_line, @1.first_column); }
 ;

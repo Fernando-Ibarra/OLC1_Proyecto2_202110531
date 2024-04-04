@@ -42,11 +42,194 @@ export default class Logicas extends Instruction {
         }
     }
 
-    or(leftOp: any, rightOp: any){}
+    or(leftOp: any, rightOp: any){
+        let firstOp = this.leftOperand?.typeData.getTypeData();
+        let secondOp = this.rightOperand?.typeData.getTypeData();
+        switch (firstOp) {
+            case typeData.INT:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.FLOAT:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.STRING:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.BOOL:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        this.typeData = new TypeD(typeData.BOOL);
+                        return leftOp || rightOp;
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.CHAR:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            default:
+                return new Error('Semantico', `No se puede realizar la operacion OR`, this.row, this.column);
+        }
+    }
 
-    and(leftOp: any, rightOp: any){}
+    and(leftOp: any, rightOp: any){
+        let firstOp = this.leftOperand?.typeData.getTypeData();
+        let secondOp = this.rightOperand?.typeData.getTypeData();
+        switch (firstOp) {
+            case typeData.INT:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.FLOAT:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.STRING:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.BOOL:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        this.typeData = new TypeD(typeData.BOOL);
+                        return leftOp && rightOp;
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            case typeData.CHAR:
+                switch (secondOp) {
+                    case typeData.INT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.FLOAT:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.STRING:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.BOOL:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    case typeData.CHAR:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                    default:
+                        return new Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                }
+            default:
+                return new Error('Semantico', `No se puede realizar la operacion AND`, this.row, this.column);
+        }
+    }
 
-    not(operand:any){}
+    not(operand:any){
+        let firstOp = this.uniqueOperand?.typeData.getTypeData();
+        switch (firstOp) {
+            case typeData.INT:
+                return new Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+            case typeData.FLOAT:
+                return new Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+            case typeData.STRING:
+                return new Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+            case typeData.BOOL:
+                this.typeData = new TypeD(typeData.BOOL);
+                return !operand;
+            case typeData.CHAR:
+                return new Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+            default:
+                return new Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+        }
+    }
 
 }
 

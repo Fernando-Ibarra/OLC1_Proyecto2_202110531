@@ -33,4 +33,9 @@ cout << 50 > 'F' << endl;  // true
 cout << 25.5 >= 30 << endl; // false
 cout << 54 >= 25  << endl; // true
 cout << 50 >= 'F' << endl; // true
+
+// Logicas
+cout << true && "hola" == "hola" << endl;
+cout << true || 5<2 << endl;
+cout << !true << endl;
  
