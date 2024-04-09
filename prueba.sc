@@ -38,4 +38,26 @@ cout << 50 >= 'F' << endl; // true
 cout << true && "hola" == "hola" << endl;
 cout << true || 5<2 << endl;
 cout << !true << endl;
- 
+
+string var1, var2 = "hola";
+cout << var1 << endl;
+
+var2 = "prueba2";
+
+cout << var2 << endl;
+
+double prevVar = 10.50;
+cout << prevVar << endl;
+
+int varChange = (int) prevVar;
+cout << varChange << endl;
+
+int varChange2 = (int) 134.50;
+cout << varChange2 << endl;
+
+char letra = (char) 70; // toma el valor 'F' ya que el 70 en ascii es F 
+cout << letra << endl; 
+
+
+double numero = (double) 16; // toma el valor de 16.0
+cout << numero << endl;

@@ -1,0 +1,22 @@
+import { SymbolTable, Tree, Instruction, Error, typeData, Symbol } from '../';
+import TypeD from '../symbols/TypeD';
+
+
+export default class AccessVar extends Instruction {
+    private id: string;
+
+    constructor(id: string, row: number, column: number) {
+        super(new TypeD(typeData.VOID), row, column);
+        this.id = id;
+    }
+
+    interpret(tree: Tree, table: SymbolTable) {
+        let valueVar: Symbol = table.getVariable(this.id);
+        if (valueVar == null) {
+            return new Error('Semantico', `Acceso invalido`, this.row, this.column);
+        }
+        this.typeData = valueVar.getType();
+        return valueVar.getValue();
+    }
+
+}

@@ -41,5 +41,15 @@ export class SymbolTable {
 
     // Métodos
     public setVariable(symbol: Symbol) {
+        let found: Symbol = <Symbol>this.getCurrentTable().get(symbol.getId().toLocaleLowerCase());
+        if (found == null) {
+            this.currentTable.set(symbol.getId().toLocaleLowerCase(), symbol);
+            return true;
+        }
+        return false
+    }
+
+    public getVariable(id: string) {
+        return <Symbol> this.getCurrentTable().get(id.toLocaleLowerCase());
     }
 }

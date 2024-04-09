@@ -29,6 +29,15 @@ class SymbolTable {
     }
     // Métodos
     setVariable(symbol) {
+        let found = this.getCurrentTable().get(symbol.getId().toLocaleLowerCase());
+        if (found == null) {
+            this.currentTable.set(symbol.getId().toLocaleLowerCase(), symbol);
+            return true;
+        }
+        return false;
+    }
+    getVariable(id) {
+        return this.getCurrentTable().get(id.toLocaleLowerCase());
     }
 }
 exports.SymbolTable = SymbolTable;

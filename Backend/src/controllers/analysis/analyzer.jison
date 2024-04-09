@@ -2,9 +2,13 @@
     const TypeD = require('./symbols/TypeD');
     const Aritmeticas = require('./expressions/Aritmeticas');
     const Nativo = require('./expressions/Nativo');
-    const Cout = require('./instructions/Cout');
+    const AccessVar = require('./expressions/AccessVar');
     const Relacionales = require('./expressions/Relacionales');
     const Logicas = require('./expressions/Logicas');
+    const Cout = require('./instructions/Cout');
+    const AssigneVar = require('./instructions/AssigneVar');
+    const Declaration = require('./instructions/Declaration');
+    const Casts = require('./instructions/Casts');
 %}
 
 // Lexical analysis
@@ -19,6 +23,11 @@
 [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    /* ignore */    {}
 
 // reserved words
+"int"                   return  'INT_TYPE'
+"double"                return  'DOUBLE_TYPE'
+"char"                  return  'CHAR_TYPE'
+"string"                return  'STRING_TYPE'
+"bool"                  return  'BOOL_TYPE'
 "pow"                   return  'POW'
 "cout"                  return  'COUT'
 "new"                   return  'NEW'
@@ -85,6 +94,7 @@
 (-)?[0-9]+              return  "INTEGER"
 "true"                  return  "TRUE"
 "false"                 return  "FALSE"
+[a-z][a-z0-9_]*         return  "ID"
 [\'][^\'][\']           return  "CHAR"
 [\"][^\"]*[\"]          {yytext=yytext.substr(1,yyleng-2); return 'STRING'}
 
@@ -111,8 +121,8 @@
 %left 'PLUS' 'MINUS'
 %left 'DIVIDE' 'TIMES' 'MOD'
 %nonassoc 'POW'
-%right 'UMINUS' 
-
+%right 'UMINUS'
+%right LPAREN 
 
 
 // start symbol
@@ -127,11 +137,26 @@ INSTRUCTIONS: INSTRUCTIONS INSTRUCTION                      { $1.push($2); $$= $
             | INSTRUCTION                                   { $$ = [$1]; }
 ;
 
-INSTRUCTION: PRINT SEMICOLON                                { $$ = $1; }
+INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
+           | ASSINGNEW SEMICOLON                             { $$ = $1; }
+           | DECLARATION SEMICOLON                           { $$ = $1; }
 ;
+
 
 PRINT: COUT DOUBLE_QUOTE EXPRESSION                         { $$ = new Cout.default($3, @1.first_line, @1.first_column, false); }
      | COUT DOUBLE_QUOTE EXPRESSION DOUBLE_QUOTE ENDL       { $$ = new Cout.default($3, @1.first_line, @1.first_column, true); }
+;
+
+DECLARATION: TYPES IDS ASSIGN EXPRESSION                    { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2, $4); }
+           | TYPES IDS                                      { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2); }
+;
+
+ASSINGNEW: IDS ASSIGN EXPRESSION                             { $$ = new AssigneVar.default($1, @1.first_line, @1.first_column, $3); }
+         | IDS                                               { $$ = new AssigneVar.default($1, @1.first_line, @1.first_column, $3); }
+;
+
+IDS: IDS COMMA ID                                           { $1.push($3); $$ = $1;}
+   | ID                                                     { $$ = [$1]; }
 ;
 
 EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.PLUS, @1.first_line, @1.first_column, $1, $3);}
@@ -157,4 +182,14 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | TRUE                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOL), $1, @1.first_line, @1.first_column); }
           | FALSE                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOL), $1, @1.first_line, @1.first_column); }
           | CHAR                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.CHAR), $1, @1.first_line, @1.first_column); }
+          | ID                                              { $$ = new AccessVar.default($1, @1.first_line, @1.first_column); }
+          | LPAREN TYPES RPAREN EXPRESSION                  { $$ = new Casts.default($2, $4, @1.first_line, @1.first_column); }
+;
+
+
+TYPES : INT_TYPE             {$$ = new TypeD.default(TypeD.typeData.INT);}
+      | DOUBLE_TYPE          {$$ = new TypeD.default(TypeD.typeData.FLOAT);}
+      | STRING_TYPE          {$$ = new TypeD.default(TypeD.typeData.STRING);}
+      | CHAR_TYPE            {$$ = new TypeD.default(TypeD.typeData.CHAR);}
+      | BOOL_TYPE            {$$ = new TypeD.default(TypeD.typeData.BOOL);}
 ;
