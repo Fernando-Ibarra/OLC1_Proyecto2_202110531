@@ -1,14 +1,19 @@
 %{
     const TypeD = require('./symbols/TypeD');
+
     const Aritmeticas = require('./expressions/Aritmeticas');
     const Nativo = require('./expressions/Nativo');
     const AccessVar = require('./expressions/AccessVar');
     const Relacionales = require('./expressions/Relacionales');
     const Logicas = require('./expressions/Logicas');
+
     const Cout = require('./instructions/Cout');
     const AssigneVar = require('./instructions/AssigneVar');
     const Declaration = require('./instructions/Declaration');
     const Casts = require('./instructions/Casts');
+    const ToLower = require('./instructions/ToLower');
+    const ToUpper = require('./instructions/ToUpper');
+    const Round = require('./instructions/Round');
 %}
 
 // Lexical analysis
@@ -184,6 +189,9 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | CHAR                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.CHAR), $1, @1.first_line, @1.first_column); }
           | ID                                              { $$ = new AccessVar.default($1, @1.first_line, @1.first_column); }
           | LPAREN TYPES RPAREN EXPRESSION                  { $$ = new Casts.default($2, $4, @1.first_line, @1.first_column); }
+          | TOLOWER LPAREN EXPRESSION RPAREN                { $$ = new ToLower.default($3, @1.first_line, @1.first_column); }
+          | TOUPPER LPAREN EXPRESSION RPAREN                { $$ = new ToUpper.default($3, @1.first_line, @1.first_column); }
+          | ROUND LPAREN EXPRESSION RPAREN                  { $$ = new Round.default($3, @1.first_line, @1.first_column); }
 ;
 
 

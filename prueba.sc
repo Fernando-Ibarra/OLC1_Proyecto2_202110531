@@ -40,11 +40,10 @@ cout << true || 5<2 << endl;
 cout << !true << endl;
 
 string var1, var2 = "hola";
-cout << var1 << endl;
+cout << toupper(var1) << endl;
 
-var2 = "prueba2";
-
-cout << var2 << endl;
+var2 = "PRUEBA2";
+cout << tolower(var2) << endl;
 
 double prevVar = 10.50;
 cout << prevVar << endl;
@@ -58,6 +57,10 @@ cout << varChange2 << endl;
 char letra = (char) 70; // toma el valor 'F' ya que el 70 en ascii es F 
 cout << letra << endl; 
 
-
 double numero = (double) 16; // toma el valor de 16.0
 cout << numero << endl;
+
+double valor = 15.51; 
+cout << round(valor) << endl; //almacena 16
+double valor2 = 9.40;
+cout << round(valor2) << endl; //almacena 9
