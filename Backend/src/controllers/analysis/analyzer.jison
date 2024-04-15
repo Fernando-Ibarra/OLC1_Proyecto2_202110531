@@ -10,10 +10,23 @@
     const Cout = require('./instructions/Cout');
     const AssigneVar = require('./instructions/AssigneVar');
     const Declaration = require('./instructions/Declaration');
+    const AssigneArr = require('./instructions/AssigneArr');
+    const DeclarationArr = require('./instructions/DeclarationArr');
     const Casts = require('./instructions/Casts');
     const ToLower = require('./instructions/ToLower');
     const ToUpper = require('./instructions/ToUpper');
     const Round = require('./instructions/Round');
+    const ToString = require('./instructions/ToString');
+    const If = require('./instructions/If');
+    const For = require('./instructions/For')
+    const While = require('./instructions/While')
+    const DoWhile = require('./instructions/DoWhile')
+    const Break = require('./instructions/Break');
+    const Return = require('./instructions/Return');
+    const Continue = require('./instructions/Continue');
+    const Increment = require('./instructions/Increment');
+    const Decrement = require('./instructions/Decrement');
+    const Ternary = require('./instructions/Ternary');
 %}
 
 // Lexical analysis
@@ -121,13 +134,14 @@
 // precedence
 %left 'OR'
 %left 'AND'
-%left 'NOT'
-%left 'EQUALS' 'LESS' 'LESS_EQUAL' 'GREATER' 'GREATER_EQUAL' 'DIFFERENT' 
+%left 'EQUALS' 'DIFFERENT' 'LESS' 'LESS_EQUAL' 'GREATER' 'GREATER_EQUAL' 
 %left 'PLUS' 'MINUS'
 %left 'DIVIDE' 'TIMES' 'MOD'
 %nonassoc 'POW'
+%right 'INCREMENT' 'DECREMENT'
+%right 'LPAREN'
 %right 'UMINUS'
-%right LPAREN 
+%right 'NOT'
 
 
 // start symbol
@@ -143,17 +157,26 @@ INSTRUCTIONS: INSTRUCTIONS INSTRUCTION                      { $1.push($2); $$= $
 ;
 
 INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
-           | ASSINGNEW SEMICOLON                             { $$ = $1; }
            | DECLARATION SEMICOLON                           { $$ = $1; }
+           | ASSINGNEW SEMICOLON                             { $$ = $1; }
+           | ARRAY SEMICOLON                                 { $$ = $1; }
+           | INCREMENT SEMICOLON                             { $$ = $1; }
+           | DECREMENT SEMICOLON                             { $$ = $1; }
+           | IF_S                                            { $$ = $1; }
+           | WHILE_S                                         { $$ = $1; }
+           | DoWhile                                         { $$ = $1; }
+           | FOR_S                                           { $$ = $1; }
+           | BREAK_S                                         { $$ = $1; }
+           | CONTINUE_S                                      { $$ = $1; }
+           | RETURN_S                                        { $$ = $1; }
 ;
-
 
 PRINT: COUT DOUBLE_QUOTE EXPRESSION                         { $$ = new Cout.default($3, @1.first_line, @1.first_column, false); }
      | COUT DOUBLE_QUOTE EXPRESSION DOUBLE_QUOTE ENDL       { $$ = new Cout.default($3, @1.first_line, @1.first_column, true); }
 ;
 
-DECLARATION: TYPES IDS ASSIGN EXPRESSION                    { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2, $4); }
-           | TYPES IDS                                      { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2); }
+DECLARATION: TYPES IDS ASSIGN EXPRESSION                         { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2, $4); }
+           | TYPES IDS                                           { $$ = new Declaration.default($1, @1.first_line, @1.first_column, $2); }
 ;
 
 ASSINGNEW: IDS ASSIGN EXPRESSION                             { $$ = new AssigneVar.default($1, @1.first_line, @1.first_column, $3); }
@@ -162,6 +185,56 @@ ASSINGNEW: IDS ASSIGN EXPRESSION                             { $$ = new AssigneV
 
 IDS: IDS COMMA ID                                           { $1.push($3); $$ = $1;}
    | ID                                                     { $$ = [$1]; }
+;
+
+IF_S: IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE                                    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
+    | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE LBRACE INSTRUCTIONS RBRACE    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, true, $10); }
+    | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE IF_S                          { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
+;
+
+FOR_S: FOR LPAREN FOR_S_DE SEMICOLON EXPRESSION SEMICOLON FOR_S_UPD RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new For.default($3, $5, $7, $10, @1.first_line, @1.first_column); }
+;
+
+FOR_S_DE: DECLARATION { $$ = $1; }
+        | ASSINGNEW   { $$ = $1; }
+;
+
+FOR_S_UPD: INCREMENT { $$ = $1; }
+         | DECREMENT { $$ = $1; }
+         | ASSINGNEW { $$ = $1; }
+;
+
+WHILE_S: WHILE LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE  { $$ = new While.default($3, $6, @1.first_line, @1.first_column); }
+;
+
+DoWhile: DO LBRACE INSTRUCTIONS RBRACE WHILE LPAREN EXPRESSION RPAREN { $$ = new DoWhile.default($7, $3, @1.first_line, @1.first_column); }
+;
+
+BREAK_S: BREAK  SEMICOLON                                { $$ = new Break.default(@1.first_line, @1.first_column); }
+;
+
+CONTINUE_S: CONTINUE  SEMICOLON                          { $$ = new Continue.default(@1.first_line, @1.first_column); }
+;
+
+RETURN_S: RETURN  SEMICOLON                              { $$ = new Return.default(@1.first_line, @1.first_column); }
+        | RETURN EXPRESSION SEMICOLON                    { $$ = new Return.default(@1.first_line, @1.first_column, $2); }
+;
+
+ARRAY: TYPES IDS ARRAYBRACKET ASSIGN NEW TYPES EXPRESSION            { $$ = new DeclarationArr.default($1, $2, $7, @1.first_line, @1.first_column); }
+     | TYPES IDS ARRAYBRACKET ASSIGN EXPRESSION                      { $$ = new DeclarationArr.default($1, $2, $5, @1.first_line, @1.first_column); }
+;
+
+ASSINGARRAY: IDS EXPRESSION                             { $$ = new AssigneArr.default($1, $2, @1.first_line, @1.first_column); }
+;
+
+ARRAYBRACKET: ARRAYBRACKET LBRACKET RBRACKET            { $$ = $1; }
+            | LBRACKET RBRACKET                         { $$ = []; }
+;
+
+INCREMENT: IDS PLUS PLUS                                  { $$ = new Increment.default($1, @1.first_line, @1.first_column); }
+;
+
+DECREMENT: IDS MINUS MINUS                                { $$ = new Decrement.default($1, @1.first_line, @1.first_column); }
 ;
 
 EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmeticas.default(Aritmeticas.ArithmeticOption.PLUS, @1.first_line, @1.first_column, $1, $3);}
@@ -174,13 +247,14 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | EXPRESSION EQUALS EXPRESSION                    { $$ = new Relacionales.default(Relacionales.RelationalOption.EQUALS, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION DIFFERENT EXPRESSION                 { $$ = new Relacionales.default(Relacionales.RelationalOption.DIFFERENT, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION LESS EXPRESSION                      { $$ = new Relacionales.default(Relacionales.RelationalOption.LESS, @1.first_line, @1.first_column, $1, $3);}
-          | EXPRESSION LESS_EQUAL EXPRESSION                { $$ = new Relacionales.default(Relacionales.RelationalOption.LESS_EQUAL, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION GREATER EXPRESSION                   { $$ = new Relacionales.default(Relacionales.RelationalOption.GREATER, @1.first_line, @1.first_column, $1, $3);}
+          | EXPRESSION LESS_EQUAL EXPRESSION                { $$ = new Relacionales.default(Relacionales.RelationalOption.LESS_EQUAL, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION GREATER_EQUAL EXPRESSION             { $$ = new Relacionales.default(Relacionales.RelationalOption.GREATER_EQUAL, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION OR EXPRESSION                        { $$ = new Logicas.default(Logicas.LogicasOption.OR, @1.first_line, @1.first_column, $1, $3);}
           | EXPRESSION AND EXPRESSION                       { $$ = new Logicas.default(Logicas.LogicasOption.AND, @1.first_line, @1.first_column, $1, $3);}
           | NOT EXPRESSION                                  { $$ = new Logicas.default(Logicas.LogicasOption.NOT, @1.first_line, @1.first_column, $2);}
           | LPAREN EXPRESSION RPAREN                        { $$ = $2; }
+          | LPAREN TYPES RPAREN EXPRESSION                  { $$ = new Casts.default($2, $4, @1.first_line, @1.first_column); }
           | INTEGER                                         { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.INT), $1, @1.first_line, @1.first_column); }
           | FLOAT                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.FLOAT), $1, @1.first_line, @1.first_column); }
           | STRING                                          { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.STRING), $1, @1.first_line, @1.first_column);}
@@ -188,16 +262,26 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | FALSE                                           { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.BOOL), $1, @1.first_line, @1.first_column); }
           | CHAR                                            { $$ = new Nativo.default(new TypeD.default(TypeD.typeData.CHAR), $1, @1.first_line, @1.first_column); }
           | ID                                              { $$ = new AccessVar.default($1, @1.first_line, @1.first_column); }
-          | LPAREN TYPES RPAREN EXPRESSION                  { $$ = new Casts.default($2, $4, @1.first_line, @1.first_column); }
           | TOLOWER LPAREN EXPRESSION RPAREN                { $$ = new ToLower.default($3, @1.first_line, @1.first_column); }
           | TOUPPER LPAREN EXPRESSION RPAREN                { $$ = new ToUpper.default($3, @1.first_line, @1.first_column); }
           | ROUND LPAREN EXPRESSION RPAREN                  { $$ = new Round.default($3, @1.first_line, @1.first_column); }
+          | STD COLON COLON TOSTRING LPAREN EXPRESSION RPAREN               { $$ = new ToString.default($6, @1.first_line, @1.first_column); }
+          | LISTF                                           { $$ = $1; }
+          | LPAREN EXPRESSION RPAREN INTERROGATION EXPRESSION COLON EXPRESSION { $$ = new Ternary.default($2, $5, $7, @1.first_line, @1.first_column); }
+          // | LISTACCES                                      { $$ = $1; }
 ;
 
+LIST: LIST COMMA EXPRESSION                               { $1.push($3); $$ = $1; }
+    | EXPRESSION                                          { $$ = [$1]; }
+;
 
-TYPES : INT_TYPE             {$$ = new TypeD.default(TypeD.typeData.INT);}
-      | DOUBLE_TYPE          {$$ = new TypeD.default(TypeD.typeData.FLOAT);}
-      | STRING_TYPE          {$$ = new TypeD.default(TypeD.typeData.STRING);}
-      | CHAR_TYPE            {$$ = new TypeD.default(TypeD.typeData.CHAR);}
-      | BOOL_TYPE            {$$ = new TypeD.default(TypeD.typeData.BOOL);}
+LISTF: LISTF LBRACKET LIST RBRACKET       { $1.push($3); $$ = $1; }
+     | LBRACKET LIST RBRACKET                 { $$ = [$2]; }
+;
+
+TYPES : INT_TYPE                        {$$ = new TypeD.default(TypeD.typeData.INT);}
+      | DOUBLE_TYPE                     {$$ = new TypeD.default(TypeD.typeData.FLOAT);}
+      | STD COLON COLON STRING_TYPE     {$$ = new TypeD.default(TypeD.typeData.STRING);}
+      | CHAR_TYPE                       {$$ = new TypeD.default(TypeD.typeData.CHAR);}
+      | BOOL_TYPE                       {$$ = new TypeD.default(TypeD.typeData.BOOL);}
 ;

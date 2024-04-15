@@ -50,6 +50,10 @@ export class SymbolTable {
     }
 
     public getVariable(id: string) {
-        return <Symbol> this.getCurrentTable().get(id.toLocaleLowerCase());
+        for (let i: SymbolTable = this; i != null; i = i.getLastTable()) {
+            let founded: Symbol = <Symbol>i.getCurrentTable().get(id.toLocaleLowerCase());
+            if (founded != null) return founded;
+        }
+        return null;
     }
 }

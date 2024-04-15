@@ -37,7 +37,12 @@ class SymbolTable {
         return false;
     }
     getVariable(id) {
-        return this.getCurrentTable().get(id.toLocaleLowerCase());
+        for (let i = this; i != null; i = i.getLastTable()) {
+            let founded = i.getCurrentTable().get(id.toLocaleLowerCase());
+            if (founded != null)
+                return founded;
+        }
+        return null;
     }
 }
 exports.SymbolTable = SymbolTable;

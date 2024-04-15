@@ -1,5 +1,7 @@
+import { Console } from 'console';
 import { SymbolTable, Tree, Instruction, Error, typeData } from '../';
 import TypeD from '../symbols/TypeD';
+import { parse } from 'path';
 
 // TODO: Operaciones como cadena-carácter, es error semántico, a menos que se utilice toString en el carácter.
 
@@ -10,7 +12,7 @@ export default class Relacionales extends Instruction {
     private uniqueOperand: Instruction | undefined;
 
     constructor(relational: RelationalOption, row: number, column: number, leftOperand: Instruction, rightOperand?: Instruction) {
-        super(new TypeD(typeData.INT), row, column);
+        super(new TypeD(typeData.BOOL), row, column);
         this.relational = relational;
         if (!rightOperand) {
             this.uniqueOperand = leftOperand;
@@ -57,82 +59,46 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        return leftOp == rightOp;
+                        return parseInt(leftOp) == parseInt(rightOp);
                     case typeData.FLOAT:
-                        return leftOp == rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) == parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp == parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) == parseInt(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp == rightOp;
+                        return parseFloat(leftOp) == parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp == rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) == parseFloat(rightOp);
                     case typeData.CHAR:
-                        return leftOp == parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) == parseFloat(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.BOOL:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        this.typeData = new TypeD(typeData.BOOL);
+                   case typeData.BOOL:
                         return leftOp == rightOp;
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) == rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) == parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) == rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) == parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp == rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp == rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
@@ -149,84 +115,46 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp != rightOp;
+                        return parseInt(leftOp) != parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp != rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) != parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp != parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) != parseInt(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp != rightOp;
+                        return parseFloat(leftOp) != parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp != rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) != parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp != parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.BOOL:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
                     case typeData.BOOL:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp != rightOp;
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) != rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) != parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) != rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) != parseFloat(rightOp);
                     case typeData.CHAR:
                         return leftOp != rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp != rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
@@ -243,84 +171,46 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < rightOp;
+                        return parseInt(leftOp) < parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) < parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) < parseInt(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < rightOp;
+                        return  parseFloat(leftOp) < parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return  parseFloat(leftOp) < parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp < parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) < parseFloat(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.BOOL:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
                     case typeData.BOOL:
                         return leftOp < rightOp;
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) < rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) < parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) < rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) < parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp < rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp < rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
@@ -337,85 +227,46 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= rightOp;
+                        return parseInt(leftOp) <= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) <= parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) <= parseInt(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= rightOp;
+                        return parseFloat(leftOp) <= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) <= parseInt(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp <= parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) <= parseFloat(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.BOOL:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
                     case typeData.BOOL:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp <= rightOp;
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) <= rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) <= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) <= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) <= parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp <= rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp <= rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
@@ -432,85 +283,46 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > rightOp;
+                        return parseInt(leftOp) > parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) > parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) > parseInt(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > rightOp;
+                        return parseFloat(leftOp) > parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) > parseFloat(rightOp);;
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp > parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) > parseFloat(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.BOOL:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
                     case typeData.BOOL:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp > rightOp;
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) > rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) > parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) > rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) > parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp > rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp > rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
@@ -527,36 +339,22 @@ export default class Relacionales extends Instruction {
             case typeData.INT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp >= rightOp;
+                        return parseInt(leftOp) >= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp >= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseInt(leftOp) >= parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp >= parseInt(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor entero ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.FLOAT:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp >= rightOp;
+                        return parseFloat(leftOp) >= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp >= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) >= parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return leftOp >= parseFloat(rightOp.charCodeAt(0).toString());
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un valor doble ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp) >= parseFloat(rightOp.charCodeAt(0).toString());
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
@@ -567,7 +365,6 @@ export default class Relacionales extends Instruction {
                     case typeData.FLOAT:
                         return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
                     case typeData.BOOL:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp >= rightOp;
                     case typeData.CHAR:
                         return new Error('Semantico', `No se puede relalizar la comparación entre un booleano ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
@@ -579,33 +376,17 @@ export default class Relacionales extends Instruction {
             case typeData.CHAR:
                 switch (secondOp) {
                     case typeData.INT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseInt(leftOp.charCodeAt(0).toString()) >= rightOp;
+                        return parseInt(leftOp.charCodeAt(0).toString()) >= parseInt(rightOp);
                     case typeData.FLOAT:
-                        this.typeData = new TypeD(typeData.BOOL);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) >= rightOp;
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) >= parseFloat(rightOp);
                     case typeData.CHAR:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp >= rightOp;
-                    case typeData.STRING:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre un caracter ${ leftOp } y una cadena ${ rightOp }`, this.row, this.column);
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);
                 }
             case typeData.STRING:
                 switch (secondOp) {
-                    case typeData.INT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un entero ${ rightOp }`, this.row, this.column);
-                    case typeData.FLOAT:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un doble ${ rightOp }`, this.row, this.column);
-                    case typeData.BOOL:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un booleano ${ rightOp }`, this.row, this.column);
-                    case typeData.CHAR:
-                        return new Error('Semantico', `No se puede relalizar la comparación entre una cadena ${ leftOp } y un caracter ${ rightOp }`, this.row, this.column);
                     case typeData.STRING:
-                        this.typeData = new TypeD(typeData.BOOL);
                         return leftOp >= rightOp;
                     default:
                         return new Error('Semantico', `No se puede relalizar la comparación`, this.row, this.column);

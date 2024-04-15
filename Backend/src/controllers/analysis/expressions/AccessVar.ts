@@ -11,7 +11,7 @@ export default class AccessVar extends Instruction {
     }
 
     interpret(tree: Tree, table: SymbolTable) {
-        let valueVar: Symbol = table.getVariable(this.id);
+        let valueVar: Symbol = <Symbol>table.getVariable(this.id);
         if (valueVar == null) {
             return new Error('Semantico', `Acceso invalido`, this.row, this.column);
         }
