@@ -46,7 +46,10 @@ class controller {
             }
             astDot += "}";
             console.log(astDot);
-            res.status(201).json({ "codeOutput": ast.getConsole() });
+            res.status(201).json({
+                "codeOutput": ast.getConsole(),
+                "ast": astDot
+            });
         }
         catch (error) {
             console.log(error);

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -126,7 +128,19 @@ export const Home = () => {
                             }                        
                         }}
                     >
-                        Reportes
+                        <Link
+                            to={`/ast`}
+                            component={RouterLink}
+                            underline='none'
+                            sx={{
+                              margin: '0',
+                              padding: '0',
+                              width: '100%',
+                              color: '#000000',
+                            }}
+                        >
+                            AST
+                        </Link>
                     </Button>
                 </Stack>
             </Grid>

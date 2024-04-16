@@ -1,8 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { compilerSlice } from './compiler';
+import { compilerSlice, reportsSlice  } from './';
 
 export const store = configureStore({
     reducer : {
-        compiler: compilerSlice.reducer
+        compiler: compilerSlice.reducer,
+        reports: reportsSlice.reducer
     }
 });
