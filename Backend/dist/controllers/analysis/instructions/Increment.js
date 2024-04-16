@@ -9,6 +9,7 @@ class Increment extends __1.Instruction {
     constructor(id, line, column) {
         super(new TypeD_1.default(__1.typeData.VOID), line, column);
         this.id = id[0];
+        this.nodeName = `Increment${this.row}_${this.column}`;
     }
     interpret(tree, table) {
         let value = table.getVariable(this.id.toLocaleLowerCase());
@@ -19,6 +20,11 @@ class Increment extends __1.Instruction {
         }
         this.typeData = value.getType();
         value.setValue(parseInt(value.getValue()) + 1);
+    }
+    ast(fatherNode) {
+        let ast = `node_${this.nodeName}[label="Increment"]\n`;
+        ast += `${fatherNode} -> node_${this.nodeName}\n`;
+        return ast;
     }
 }
 exports.default = Increment;

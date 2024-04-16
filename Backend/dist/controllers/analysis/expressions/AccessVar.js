@@ -18,5 +18,8 @@ class AccessVar extends __1.Instruction {
         this.typeData = valueVar.getType();
         return valueVar.getValue();
     }
+    ast(father) {
+        return "";
+    }
 }
 exports.default = AccessVar;

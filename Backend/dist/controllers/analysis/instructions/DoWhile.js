@@ -36,6 +36,7 @@ class DoWhile extends __1.Instruction {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
+        this.nodeName = `DoWhile${row}_${column}`;
     }
     interpret(tree, table) {
         do {
@@ -58,6 +59,18 @@ class DoWhile extends __1.Instruction {
                 }
             }
         } while (this.condition.interpret(tree, table));
+    }
+    ast(fatherNode) {
+        let newFather = `node_DoWhile${this.nodeName}`;
+        let ast = `${newFather}[label="Do While"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_DoWhile${this.nodeName}_1[label="Condition"]\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_1\n`;
+        ast += this.condition.ast(`node_DoWhile${this.nodeName}_1`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        return ast;
     }
 }
 exports.default = DoWhile;

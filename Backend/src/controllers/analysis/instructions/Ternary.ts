@@ -5,12 +5,14 @@ export default class Ternary extends Instruction {
     private condition: Instruction;
     private conditionTrue: Instruction;
     private conditionFalse: Instruction;
+    private nodeName: string;
 
     constructor(condition: Instruction, conditionTrue: Instruction, conditionFalse: Instruction, row: number, column: number) {
         super(new TypeD(typeData.VOID), row, column);
         this.condition = condition;
         this.conditionTrue = conditionTrue;
         this.conditionFalse = conditionFalse;
+        this.nodeName = `Ternary${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -32,5 +34,9 @@ export default class Ternary extends Instruction {
             if (value instanceof Error) return value;
             return value;
         }
+    }
+
+    ast(fatherNode: string): string {
+        return "";
     }
 }

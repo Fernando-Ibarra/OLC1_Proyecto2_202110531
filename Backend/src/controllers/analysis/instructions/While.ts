@@ -7,11 +7,13 @@ import Return from './Return';
 export default class While extends Instruction {
     private condition: Instruction;
     private instructions: Instruction[];
+    private nodeName: string;
 
     constructor(condition: Instruction, instructions: Instruction[], row: number, column: number) {
         super(new TypeD(typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
+        this.nodeName = `While${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -41,5 +43,18 @@ export default class While extends Instruction {
                 }
             }
         }
+    }
+
+    ast(fatherNode: string): string {
+        let newFather = `node_While${this.nodeName}`;
+        let ast = `${newFather}[label="While"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_While${this.nodeName}_1[label="Condition"]\n`;
+        ast += `${newFather} -> node_While${this.nodeName}_1\n`;
+        ast += this.condition.ast(`node_While${this.nodeName}_1`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        return ast;
     }
 }

@@ -14,5 +14,8 @@ class AssigneArr extends __1.Instruction {
     interpret(tree, table) {
         console.log('ASSIGNEARR', this.value);
     }
+    ast(fatherNode) {
+        return "";
+    }
 }
 exports.default = AssigneArr;

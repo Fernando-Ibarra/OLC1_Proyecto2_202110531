@@ -38,6 +38,7 @@ class For extends __1.Instruction {
         this.condition = condition;
         this.increment = increment;
         this.instructions = instructions;
+        this.nodeName = `For${row}_${column}`;
     }
     interpret(tree, table) {
         let newTable = new __1.SymbolTable(table);
@@ -76,6 +77,24 @@ class For extends __1.Instruction {
                 return inc;
             conditionValue = this.condition.interpret(tree, newTable);
         }
+    }
+    ast(fatherNode) {
+        let newFather = `node_For${this.nodeName}`;
+        let ast = `${newFather}[label="For"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_For${this.nodeName}_1[label="Declaration"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_1\n`;
+        ast += this.declaration.ast(`node_For${this.nodeName}_1`);
+        ast += `node_For${this.nodeName}_2[label="Condition"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_2\n`;
+        ast += this.condition.ast(`node_For${this.nodeName}_2`);
+        ast += `node_For${this.nodeName}_3[label="Update"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_3\n`;
+        ast += this.increment.ast(`node_For${this.nodeName}_3`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        return ast;
     }
 }
 exports.default = For;

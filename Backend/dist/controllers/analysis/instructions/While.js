@@ -36,6 +36,7 @@ class While extends __1.Instruction {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
+        this.nodeName = `While${row}_${column}`;
     }
     interpret(tree, table) {
         let cond = this.condition.interpret(tree, table);
@@ -64,6 +65,18 @@ class While extends __1.Instruction {
                 }
             }
         }
+    }
+    ast(fatherNode) {
+        let newFather = `node_While${this.nodeName}`;
+        let ast = `${newFather}[label="While"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_While${this.nodeName}_1[label="Condition"]\n`;
+        ast += `${newFather} -> node_While${this.nodeName}_1\n`;
+        ast += this.condition.ast(`node_While${this.nodeName}_1`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        return ast;
     }
 }
 exports.default = While;

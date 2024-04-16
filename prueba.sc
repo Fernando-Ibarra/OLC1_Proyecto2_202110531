@@ -105,3 +105,17 @@ do{
 cout << "-----------------TERNARIO--------------------" << endl;
 bool varBool = (m<5) ? true : false;
 cout << varBool<< endl;
+
+cout << "-----------------SWITCH--------------------" << endl;
+int edad = 18;
+switch( edad ) {
+    Case 10:
+        cout << "10" << endl;
+    Case 18:
+        cout << "18" << endl;
+        break;
+    Case 25:
+        cout << "25" << endl;
+    Default:
+        cout << "default" << endl;
+}

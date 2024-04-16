@@ -3,10 +3,12 @@ import TypeD from '../symbols/TypeD';
 
 export default class Increment extends Instruction {
     private id: string;
+    private nodeName: string
 
     constructor(id: string, line: number, column: number) {
         super(new TypeD(typeData.VOID), line, column)
         this.id = id[0]
+        this.nodeName = `Increment${this.row}_${this.column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -17,6 +19,12 @@ export default class Increment extends Instruction {
         }
         this.typeData = value.getType()
         value.setValue(parseInt(value.getValue()) + 1)
+    }
+
+    ast(fatherNode: string): string {
+        let ast = `node_${this.nodeName}[label="Increment"]\n`
+        ast += `${fatherNode} -> node_${this.nodeName}\n`
+        return ast
     }
 
 }

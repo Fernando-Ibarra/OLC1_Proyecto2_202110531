@@ -38,4 +38,8 @@ export default class AssigneVar extends Instruction {
             
         }
     }
+
+    ast(fatherNode: string): string {
+        return ""
+    }
 }

@@ -9,6 +9,7 @@ class ToUpper extends __1.Instruction {
     constructor(exp, line, column) {
         super(new TypeD_1.default(__1.typeData.STRING), line, column);
         this.expression = exp;
+        this.nodeName = `ToUpper${line}_${column}`;
     }
     interpret(tree, table) {
         let value = this.expression.interpret(tree, table);
@@ -21,6 +22,12 @@ class ToUpper extends __1.Instruction {
         }
         this.typeData = new TypeD_1.default(__1.typeData.STRING);
         return value.toLocaleUpperCase();
+    }
+    ast(fatherNode) {
+        let ast = `node_${this.nodeName}[label="ToUpper"]\n`;
+        ast += `${fatherNode} -> node_${this.nodeName}\n`;
+        ast += this.expression.ast(`node_${this.nodeName}`);
+        return ast;
     }
 }
 exports.default = ToUpper;

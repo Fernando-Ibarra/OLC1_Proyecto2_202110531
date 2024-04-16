@@ -24,5 +24,8 @@ class DeclarationArr extends __1.Instruction {
         //     return new Error('Semantico', `La variable ${id} ya existe`, this.row, this.column)
         // }
     }
+    ast(fatherNode) {
+        return "";
+    }
 }
 exports.default = DeclarationArr;

@@ -34,5 +34,8 @@ class Declaration extends __1.Instruction {
             }
         }
     }
+    ast(fatherNode) {
+        return "";
+    }
 }
 exports.default = Declaration;

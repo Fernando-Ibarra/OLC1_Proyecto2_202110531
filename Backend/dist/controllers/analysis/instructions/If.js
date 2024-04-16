@@ -38,6 +38,7 @@ class If extends __1.Instruction {
         this.instructions = instructions;
         this.instructionsElse = instructionsElse;
         this.elseIf = elseIf;
+        this.nodeName = `If${row}_${column}`;
     }
     interpret(tree, table) {
         let cond = this.condition.interpret(tree, table);
@@ -92,6 +93,27 @@ class If extends __1.Instruction {
                 }
             }
         }
+    }
+    ast(fatherNode) {
+        let newFather = `node_If${this.nodeName}`;
+        let ast = `${newFather}[label="If"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_If${this.nodeName}_1[label="Condition"]\n`;
+        ast += `${newFather} -> node_If${this.nodeName}_1\n`;
+        ast += this.condition.ast(`node_If${this.nodeName}_1`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        if (this.elseIf) {
+            ast += `node_If${this.nodeName}_2[label="Else"]\n`;
+            ast += `${newFather} -> node_If${this.nodeName}_2\n`;
+            if (this.instructionsElse) {
+                for (let i of this.instructionsElse) {
+                    ast += i.ast(`node_If${this.nodeName}_2`);
+                }
+            }
+        }
+        return ast;
     }
 }
 exports.default = If;

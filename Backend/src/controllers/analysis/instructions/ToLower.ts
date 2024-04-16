@@ -2,12 +2,13 @@ import { Error, Instruction, SymbolTable, Tree, typeData } from '../';
 import TypeD from '../symbols/TypeD';
 
 export default class ToLower extends Instruction{
-
     private expression: Instruction;
+    private nodeName: string;
 
     constructor(exp: Instruction, line: number, column: number){
         super(new TypeD(typeData.STRING), line, column)
         this.expression = exp
+        this.nodeName = `ToLower${line}_${column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -22,5 +23,14 @@ export default class ToLower extends Instruction{
 
         this.typeData = new TypeD(typeData.STRING);
         return value.toLocaleLowerCase();
+    }
+
+    ast(fatherNode: string): string {
+        let ast = `node_${this.nodeName}[label="ToLower"]\n`
+        ast += `${fatherNode} -> node_${this.nodeName}\n`
+
+        ast += this.expression.ast(`node_${this.nodeName}`)
+
+        return ast
     }
 }

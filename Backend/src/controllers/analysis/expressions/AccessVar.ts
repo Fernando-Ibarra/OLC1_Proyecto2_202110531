@@ -19,4 +19,8 @@ export default class AccessVar extends Instruction {
         return valueVar.getValue();
     }
 
+    ast(father: string): string {
+        return ""
+    }
+
 }

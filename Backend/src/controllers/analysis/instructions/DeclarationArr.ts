@@ -30,4 +30,8 @@ export default class DeclarationArr extends Instruction {
         // }
     }
 
+    ast(fatherNode: string): string {
+        return ""
+    }
+
 }

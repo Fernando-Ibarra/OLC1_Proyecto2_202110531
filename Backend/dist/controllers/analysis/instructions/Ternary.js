@@ -31,6 +31,7 @@ class Ternary extends __1.Instruction {
         this.condition = condition;
         this.conditionTrue = conditionTrue;
         this.conditionFalse = conditionFalse;
+        this.nodeName = `Ternary${row}_${column}`;
     }
     interpret(tree, table) {
         let cond = this.condition.interpret(tree, table);
@@ -53,6 +54,9 @@ class Ternary extends __1.Instruction {
                 return value;
             return value;
         }
+    }
+    ast(fatherNode) {
+        return "";
     }
 }
 exports.default = Ternary;

@@ -4,10 +4,12 @@ import TypeD from '../symbols/TypeD';
 export default class ToString extends Instruction{
 
     private expression: Instruction;
+    private nodeName: string;
 
     constructor(exp: Instruction, line: number, column: number){
         super(new TypeD(typeData.STRING), line, column)
         this.expression = exp
+        this.nodeName = `ToString${line}_${column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -22,5 +24,14 @@ export default class ToString extends Instruction{
 
         this.typeData = new TypeD(typeData.STRING);
         return value.toString();
+    }
+
+    ast(fatherNode: string): string {
+        let ast = `node_${this.nodeName}[label="ToString"]\n`
+        ast += `${fatherNode} -> node_${this.nodeName}\n`
+
+        ast += this.expression.ast(`node_${this.nodeName}`)
+
+        return ast
     }
 }

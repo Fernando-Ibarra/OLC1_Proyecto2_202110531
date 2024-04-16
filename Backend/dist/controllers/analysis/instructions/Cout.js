@@ -10,6 +10,7 @@ class Cout extends __1.Instruction {
         super(new TypeD_1.default(__1.typeData.VOID), line, column);
         this.expression = exp;
         this.endl = endl;
+        this.nameNode = `Cout${line}_${column}`;
     }
     interpret(tree, table) {
         let value = this.expression.interpret(tree, table);
@@ -22,6 +23,16 @@ class Cout extends __1.Instruction {
         else {
             tree.Cout(value);
         }
+    }
+    ast(father) {
+        let ast = `node_Cout${this.nameNode}[label="cout"]\n`;
+        ast += `node_CoutLP${this.nameNode} [label="("]\n`;
+        ast += this.expression.ast(`node_Cout${this.nameNode}`);
+        ast += `node_CoutRP${this.nameNode} [label=")"]\n`;
+        ast += `node_Cout${this.nameNode} -> node_CoutLP${this.nameNode}\n`;
+        ast += `node_Cout${this.nameNode} -> node_CoutRP${this.nameNode} \n`;
+        ast += `${father} -> node_Cout${this.nameNode} \n`;
+        return ast;
     }
 }
 exports.default = Cout;

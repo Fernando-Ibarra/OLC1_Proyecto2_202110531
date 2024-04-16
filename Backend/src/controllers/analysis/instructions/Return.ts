@@ -18,4 +18,14 @@ export default class Return extends Instruction {
             return;
         }
     }
+
+    ast(fatherNode: string): string {
+        let ast = `node_Return${ this.row }_${ this.column }[label="Return"]\n`
+        if (this.expression) {
+            ast += `node_Return${ this.row }_${ this.column } -> node_Expression${ this.expression.row }_${ this.expression.column }\n`
+            ast += this.expression.ast(`Return${ this.row }_${ this.column }`)
+        }
+        ast += `node_${ fatherNode } -> node_Return${ this.row }_${ this.column }\n`
+        return ast;
+    }
 }

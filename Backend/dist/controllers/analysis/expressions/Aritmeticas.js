@@ -17,6 +17,7 @@ class Aritmeticas extends __1.Instruction {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
         }
+        this.nameNode = `Aritmeticas${row}_${column}`;
     }
     interpret(tree, table) {
         var _a, _b;
@@ -634,6 +635,24 @@ class Aritmeticas extends __1.Instruction {
             default:
                 return new __1.Error('Semantico', `No se puede realizar la negación`, this.row, this.column);
         }
+    }
+    ast(fatherNode) {
+        let ast = '';
+        if (!this.uniqueOperand) {
+            ast += `node_Rela${this.nameNode} [label="${this.operator}"]\n`;
+            ast += `nodeuniOp${this.nameNode} [label="${this.uniqueOperand}"]\n`;
+            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`;
+            ast += `${fatherNode} -> nodeuniOp${this.nameNode}\n`;
+        }
+        else {
+            ast += `nodeLeft${this.nameNode} [label="${this.leftOperand}"]\n`;
+            ast += `node_Rela${this.nameNode} [label="${this.operator}"]\n`;
+            ast += `nodeRight${this.nameNode} [label="${this.rightOperand}"]\n`;
+            ast += `${fatherNode} -> nodeLeft${this.nameNode}\n`;
+            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`;
+            ast += `${fatherNode} -> nodeRight${this.nameNode}\n`;
+        }
+        return ast;
     }
 }
 exports.default = Aritmeticas;

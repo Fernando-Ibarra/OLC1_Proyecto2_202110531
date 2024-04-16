@@ -9,6 +9,7 @@ class Round extends __1.Instruction {
     constructor(exp, line, column) {
         super(new TypeD_1.default(__1.typeData.STRING), line, column);
         this.expression = exp;
+        this.nodeName = `Round${line}_${column}`;
     }
     interpret(tree, table) {
         let value = this.expression.interpret(tree, table);
@@ -21,6 +22,12 @@ class Round extends __1.Instruction {
         }
         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
         return Math.round(value);
+    }
+    ast(fatherNode) {
+        let ast = `node_${this.nodeName}[label="Round"]\n`;
+        ast += `${fatherNode} -> node_${this.nodeName}\n`;
+        ast += this.expression.ast(`node_${this.nodeName}`);
+        return ast;
     }
 }
 exports.default = Round;

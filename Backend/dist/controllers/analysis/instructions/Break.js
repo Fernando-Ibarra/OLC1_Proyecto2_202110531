@@ -32,5 +32,10 @@ class Break extends __1.Instruction {
     interpret(tree, table) {
         return;
     }
+    ast(fatherNode) {
+        let ast = `node_Break${this.row}_${this.column}[label="Break"]\n`;
+        ast += `${fatherNode} -> node_Break${this.row}_${this.column}\n`;
+        return "";
+    }
 }
 exports.default = Break;

@@ -38,4 +38,8 @@ export default class Declaration extends Instruction {
         }
         
     }
+
+    ast(fatherNode: string): string {
+        return ""
+    }
 }

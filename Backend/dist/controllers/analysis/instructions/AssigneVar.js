@@ -40,5 +40,8 @@ class AssigneVar extends __1.Instruction {
             }
         }
     }
+    ast(fatherNode) {
+        return "";
+    }
 }
 exports.default = AssigneVar;

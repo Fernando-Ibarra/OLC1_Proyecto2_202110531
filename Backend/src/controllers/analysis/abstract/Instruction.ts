@@ -13,4 +13,6 @@ export abstract class Instruction {
     }
 
     abstract interpret(tree: Tree, table: SymbolTable): any;
+
+    abstract ast( fatherNode: string ): string
 }

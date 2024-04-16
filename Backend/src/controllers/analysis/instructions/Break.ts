@@ -9,4 +9,10 @@ export default class Break extends Instruction {
     interpret(tree: Tree, table: SymbolTable) {
         return;
     }
+
+    ast(fatherNode: string): string {
+        let ast = `node_Break${ this.row }_${ this.column }[label="Break"]\n`
+        ast += `${ fatherNode } -> node_Break${ this.row }_${ this.column }\n`
+        return ""
+    }
 }

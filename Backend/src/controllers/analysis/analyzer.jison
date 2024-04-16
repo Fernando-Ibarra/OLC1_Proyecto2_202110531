@@ -27,6 +27,9 @@
     const Increment = require('./instructions/Increment');
     const Decrement = require('./instructions/Decrement');
     const Ternary = require('./instructions/Ternary');
+    const Switch = require('./instructions/Switch');
+    const Case = require('./instructions/Case');
+    const Default = require('./instructions/Default');
 %}
 
 // Lexical analysis
@@ -55,6 +58,7 @@
 "else"                  return  'ELSE'
 "switch"                return  'SWITCH'
 "case"                  return  'CASE'
+"default"               return  'DEFAULT'
 "while"                 return  'WHILE'
 "do"                    return  'DO'
 "for"                   return  'FOR'
@@ -163,6 +167,7 @@ INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
            | INCREMENT SEMICOLON                             { $$ = $1; }
            | DECREMENT SEMICOLON                             { $$ = $1; }
            | IF_S                                            { $$ = $1; }
+           | SWITCH_S                                        { $$ = $1; }
            | WHILE_S                                         { $$ = $1; }
            | DoWhile                                         { $$ = $1; }
            | FOR_S                                           { $$ = $1; }
@@ -190,6 +195,19 @@ IDS: IDS COMMA ID                                           { $1.push($3); $$ = 
 IF_S: IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE                                    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
     | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE LBRACE INSTRUCTIONS RBRACE    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, true, $10); }
     | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE IF_S                          { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
+;
+
+SWITCH_S: SWITCH LPAREN EXPRESSION RPAREN LBRACE CASELIST DEFAULT_S RBRACE { $$ = new Switch.default($3, @1.first_line, @1.first_column, $6, $7); }
+;
+
+CASELIST: CASELIST CASE_S                                  { $1.push($2); $$ = $1; }
+        | CASE_S                                          { $$ = [$1]; }
+;
+
+CASE_S: CASE EXPRESSION COLON INSTRUCTIONS                 { $$ = new Case.default($2, $4, @1.first_line, @1.first_column); }
+;
+
+DEFAULT_S: DEFAULT COLON INSTRUCTIONS                       { $$ = new Default.default($3, @1.first_line, @1.first_column); }
 ;
 
 FOR_S: FOR LPAREN FOR_S_DE SEMICOLON EXPRESSION SEMICOLON FOR_S_UPD RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new For.default($3, $5, $7, $10, @1.first_line, @1.first_column); }

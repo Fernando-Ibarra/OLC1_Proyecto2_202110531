@@ -9,4 +9,10 @@ export default class Continue extends Instruction {
     interpret(tree: Tree, table: SymbolTable) {
         return;
     }
+
+    ast(fatherNode: string): string {
+        let ast = `node_Continue${ this.row }_${ this.column }[label="Continue"]\n`
+        ast += `${ fatherNode } -> node_Continue${ this.row }_${ this.column }\n`
+        return ast
+    }
 }

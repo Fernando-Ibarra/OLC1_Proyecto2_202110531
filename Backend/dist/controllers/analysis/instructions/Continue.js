@@ -32,5 +32,10 @@ class Continue extends __1.Instruction {
     interpret(tree, table) {
         return;
     }
+    ast(fatherNode) {
+        let ast = `node_Continue${this.row}_${this.column}[label="Continue"]\n`;
+        ast += `${fatherNode} -> node_Continue${this.row}_${this.column}\n`;
+        return ast;
+    }
 }
 exports.default = Continue;

@@ -9,6 +9,7 @@ export default class For extends Instruction {
     private condition: Instruction;
     private increment: Instruction;
     private instructions: Instruction[];
+    private nodeName: string;
 
     constructor(declaration: Instruction, condition: Instruction, increment: Instruction, instructions: Instruction[], row: number, column: number) {
         super(new TypeD(typeData.VOID), row, column);
@@ -16,6 +17,7 @@ export default class For extends Instruction {
         this.condition = condition;
         this.increment = increment;
         this.instructions = instructions;
+        this.nodeName = `For${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -56,5 +58,24 @@ export default class For extends Instruction {
 
             conditionValue = this.condition.interpret(tree, newTable);
         }
+    }
+
+    ast(fatherNode: string): string {
+        let newFather = `node_For${this.nodeName}`;
+        let ast = `${newFather}[label="For"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_For${this.nodeName}_1[label="Declaration"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_1\n`;
+        ast += this.declaration.ast(`node_For${this.nodeName}_1`);
+        ast += `node_For${this.nodeName}_2[label="Condition"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_2\n`;
+        ast += this.condition.ast(`node_For${this.nodeName}_2`);
+        ast += `node_For${this.nodeName}_3[label="Update"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_3\n`;
+        ast += this.increment.ast(`node_For${this.nodeName}_3`);
+        for (let i of this.instructions) {
+            ast += i.ast(newFather);
+        }
+        return ast;
     }
 }

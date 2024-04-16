@@ -29,6 +29,7 @@ class Casts extends __1.Instruction {
     constructor(newType, expression, row, column) {
         super(newType, row, column);
         this.expression = expression;
+        this.nodeName = `Casts${row}_${column}`;
     }
     interpret(tree, table) {
         let exp = this.expression.interpret(tree, table);
@@ -88,6 +89,16 @@ class Casts extends __1.Instruction {
             default:
                 return new __1.Error('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
         }
+    }
+    ast(fatherNode) {
+        let ast = `node_Casts${this.nodeName}[label="Casts"]\n`;
+        ast += `node_Casts(${this.nodeName} [label="("]\n`;
+        ast += this.expression.ast(`node_Casts${this.nodeName}`);
+        ast += `node_Casts)${this.nodeName} [label=")"]\n`;
+        ast += `node_Casts${this.nodeName} -> node_Casts(${this.nodeName} \n`;
+        ast += `node_Casts${this.nodeName} -> node_Casts)${this.nodeName} \n`;
+        ast += `${fatherNode}  -> node_Casts${this.nodeName} \n`;
+        return ast;
     }
 }
 exports.default = Casts;

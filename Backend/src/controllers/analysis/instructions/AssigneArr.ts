@@ -16,4 +16,8 @@ export default class AssigneArr extends Instruction {
         console.log('ASSIGNEARR', this.value)
     }
 
+    ast(fatherNode: string): string {
+        return ""
+    }
+
 }
