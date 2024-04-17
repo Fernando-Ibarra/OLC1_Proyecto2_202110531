@@ -1,4 +1,4 @@
-import { SymbolTable, Tree, Instruction, Error, typeData } from '..';
+import { SymbolTable, Tree, Instruction, typeData } from '..';
 import TypeD from '../symbols/TypeD';
 
 export default class Nativo extends Instruction {

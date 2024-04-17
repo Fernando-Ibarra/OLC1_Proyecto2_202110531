@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Error = void 0;
 class Error {
     constructor(typeError, description, row, column) {
         this.typeError = typeError;
@@ -35,4 +34,4 @@ class Error {
         this.column = column;
     }
 }
-exports.Error = Error;
+exports.default = Error;

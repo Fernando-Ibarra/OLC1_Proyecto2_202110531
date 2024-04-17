@@ -1,5 +1,6 @@
 import { SymbolTable } from './';
-import { Instruction, Error } from '../';
+import { Instruction } from '../';
+import Error from '../exceptions/Errors';
 
 export class Tree {
     private instructions: Array<Instruction>;

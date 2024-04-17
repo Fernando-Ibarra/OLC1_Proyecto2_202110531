@@ -1,4 +1,5 @@
-import { SymbolTable, Tree, Instruction, Error, typeData, Symbol } from '../';
+import { SymbolTable, Tree, Instruction, typeData, Symbol } from '../';
+import Error from '../exceptions/Errors';
 import TypeD from '../symbols/TypeD';
 
 

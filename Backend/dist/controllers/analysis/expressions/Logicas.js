@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LogicasOption = void 0;
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class Logicas extends __1.Instruction {
     constructor(Logica, row, column, leftOperand, rightOperand) {
@@ -24,15 +25,15 @@ class Logicas extends __1.Instruction {
         let leftOp, rightOp, uniqueOp = null;
         if (this.uniqueOperand != null) {
             uniqueOp = this.uniqueOperand.interpret(tree, table);
-            if (uniqueOp instanceof __1.Error)
+            if (uniqueOp instanceof Errors_1.default)
                 return uniqueOp;
         }
         else {
             leftOp = (_a = this.leftOperand) === null || _a === void 0 ? void 0 : _a.interpret(tree, table);
-            if (leftOp instanceof __1.Error)
+            if (leftOp instanceof Errors_1.default)
                 return leftOp;
             rightOp = (_b = this.rightOperand) === null || _b === void 0 ? void 0 : _b.interpret(tree, table);
-            if (rightOp instanceof __1.Error)
+            if (rightOp instanceof Errors_1.default)
                 return rightOp;
         }
         switch (this.Logica) {
@@ -43,7 +44,7 @@ class Logicas extends __1.Instruction {
             case LogicasOption.NOT:
                 return this.not(uniqueOp);
             default:
-                return new __1.Error('Semantico', `Operador lógico invalido`, this.row, this.column);
+                return new Errors_1.default('Semantico', `Operador lógico invalido`, this.row, this.column);
         }
     }
     or(leftOp, rightOp) {
@@ -54,17 +55,17 @@ class Logicas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
@@ -72,15 +73,15 @@ class Logicas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.BOOL);
                         return leftOp || rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación OR entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             default:
-                return new __1.Error('Semantico', `No se puede realizar la operacion OR`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la operacion OR`, this.row, this.column);
         }
     }
     and(leftOp, rightOp) {
@@ -91,17 +92,17 @@ class Logicas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
@@ -109,15 +110,15 @@ class Logicas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.BOOL);
                         return leftOp && rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la operación AND entre ${firstOp} y ${secondOp}`, this.row, this.column);
                 }
             default:
-                return new __1.Error('Semantico', `No se puede realizar la operacion AND`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la operacion AND`, this.row, this.column);
         }
     }
     not(operand) {
@@ -128,7 +129,7 @@ class Logicas extends __1.Instruction {
                 this.typeData = new TypeD_1.default(__1.typeData.BOOL);
                 return !operand;
             default:
-                return new __1.Error('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la operación NOT con ${firstOp}`, this.row, this.column);
         }
     }
     ast(fatherNode) {

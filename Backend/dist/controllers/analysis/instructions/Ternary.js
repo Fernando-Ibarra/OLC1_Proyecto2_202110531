@@ -22,8 +22,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 class Ternary extends __1.Instruction {
     constructor(condition, conditionTrue, conditionFalse, row, column) {
@@ -35,22 +39,22 @@ class Ternary extends __1.Instruction {
     }
     interpret(tree, table) {
         let cond = this.condition.interpret(tree, table);
-        if (cond instanceof __1.Error)
+        if (cond instanceof Errors_1.default)
             return cond;
         if (this.condition.typeData.getTypeData() != TypeD_1.typeData.BOOL) {
-            return new __1.Error("Semántico", "Se esperaba una expresión booleana en la condición del ternario", this.row, this.column);
+            return new Errors_1.default("Semántico", "Se esperaba una expresión booleana en la condición del ternario", this.row, this.column);
         }
         if (cond) {
             this.typeData = this.conditionTrue.typeData;
             let value = this.conditionTrue.interpret(tree, table);
-            if (value instanceof __1.Error)
+            if (value instanceof Errors_1.default)
                 return value;
             return value;
         }
         else {
             this.typeData = this.conditionFalse.typeData;
             let value = this.conditionFalse.interpret(tree, table);
-            if (value instanceof __1.Error)
+            if (value instanceof Errors_1.default)
                 return value;
             return value;
         }

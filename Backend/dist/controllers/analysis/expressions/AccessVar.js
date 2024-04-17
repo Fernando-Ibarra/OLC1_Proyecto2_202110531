@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class AccessVar extends __1.Instruction {
     constructor(id, row, column) {
@@ -13,7 +14,7 @@ class AccessVar extends __1.Instruction {
     interpret(tree, table) {
         let valueVar = table.getVariable(this.id);
         if (valueVar == null) {
-            return new __1.Error('Semantico', `Acceso invalido`, this.row, this.column);
+            return new Errors_1.default('Semantico', `Acceso invalido`, this.row, this.column);
         }
         this.typeData = valueVar.getType();
         return valueVar.getValue();

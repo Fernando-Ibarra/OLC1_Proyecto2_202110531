@@ -1,4 +1,4 @@
-export class Error {
+export default class Error {
     private typeError: string;
     private description: string;
     private row: number;

@@ -22,8 +22,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 class Casts extends __1.Instruction {
     constructor(newType, expression, row, column) {
@@ -33,10 +37,10 @@ class Casts extends __1.Instruction {
     }
     interpret(tree, table) {
         let exp = this.expression.interpret(tree, table);
-        if (exp instanceof __1.Error)
+        if (exp instanceof Errors_1.default)
             return exp;
         if (exp == null)
-            return new __1.Error('Semantico', `La variable ${exp} no existe`, this.row, this.column);
+            return new Errors_1.default('Semantico', `La variable ${exp} no existe`, this.row, this.column);
         switch (this.typeData.getTypeData()) {
             case TypeD_1.typeData.INT:
                 return this.intCasts(exp);
@@ -45,7 +49,7 @@ class Casts extends __1.Instruction {
             case TypeD_1.typeData.CHAR:
                 return this.charCasts(exp);
             default:
-                return new __1.Error('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
         }
     }
     intCasts(exp) {
@@ -61,7 +65,7 @@ class Casts extends __1.Instruction {
                 this.typeData = new TypeD_1.default(TypeD_1.typeData.INT);
                 return parseInt(exp);
             default:
-                return new __1.Error('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
         }
     }
     floatCasts(exp) {
@@ -74,7 +78,7 @@ class Casts extends __1.Instruction {
                 this.typeData = new TypeD_1.default(TypeD_1.typeData.FLOAT);
                 exp = parseFloat(exp + 0.00);
             default:
-                return new __1.Error('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
         }
     }
     charCasts(exp) {
@@ -87,7 +91,7 @@ class Casts extends __1.Instruction {
                 this.typeData = new TypeD_1.default(TypeD_1.typeData.CHAR);
                 return String.fromCharCode(exp);
             default:
-                return new __1.Error('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede convertir ${this.expression.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
         }
     }
     ast(fatherNode) {

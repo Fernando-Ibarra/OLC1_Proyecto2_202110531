@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Break_1 = __importDefault(require("./Break"));
 class Case extends __1.Instruction {
@@ -40,15 +41,15 @@ class Case extends __1.Instruction {
         let newTable = new __1.SymbolTable(table);
         newTable.setName("Case Statement");
         let value = this.expression.interpret(tree, table);
-        if (value instanceof __1.Error)
+        if (value instanceof Errors_1.default)
             return value;
         for (let i of this.instructions) {
-            if (i instanceof __1.Error)
+            if (i instanceof Errors_1.default)
                 return i;
             if (i instanceof Break_1.default)
                 return i;
             let result = i.interpret(tree, newTable);
-            if (result instanceof __1.Error)
+            if (result instanceof Errors_1.default)
                 return result;
             if (result instanceof Break_1.default)
                 return result;

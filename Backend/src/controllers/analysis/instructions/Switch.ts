@@ -1,5 +1,5 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
-import Relacionales, { RelationalOption } from '../expressions/Relacionales';
+import { Instruction, Symbol, SymbolTable, Tree } from '../';
+import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Case from './Case';
 import Break from './Break';

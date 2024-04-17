@@ -1,5 +1,5 @@
-import { Console } from 'console';
-import { SymbolTable, Tree, Instruction, Error, typeData } from '../';
+import { SymbolTable, Tree, Instruction, typeData } from '../';
+import Error from '../exceptions/Errors';
 import TypeD from '../symbols/TypeD';
 import { parse } from 'path';
 

@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Break_1 = __importDefault(require("./Break"));
 const Continue_1 = __importDefault(require("./Continue"));
@@ -40,16 +41,18 @@ class While extends __1.Instruction {
     }
     interpret(tree, table) {
         let cond = this.condition.interpret(tree, table);
-        if (cond instanceof __1.Error)
+        if (cond instanceof Errors_1.default)
             return cond;
         if (this.condition.typeData.getTypeData() != TypeD_1.typeData.BOOL) {
-            return new __1.Error("Semántico", "Se esperaba una expresión booleana en la condición del while", this.row, this.column);
+            return new Errors_1.default("Semántico", "Se esperaba una expresión booleana en la condición del while", this.row, this.column);
         }
         while (this.condition.interpret(tree, table)) {
             let newTable = new __1.SymbolTable(table);
             for (let i of this.instructions) {
                 if (i instanceof Break_1.default)
                     return;
+                if (i instanceof Continue_1.default)
+                    break;
                 let result = i.interpret(tree, newTable);
                 if (result instanceof Break_1.default) {
                     return;
@@ -57,7 +60,7 @@ class While extends __1.Instruction {
                 if (result instanceof Continue_1.default) {
                     break;
                 }
-                if (result instanceof __1.Error) {
+                if (result instanceof Errors_1.default) {
                     return;
                 }
                 if (result instanceof Return_1.default) {

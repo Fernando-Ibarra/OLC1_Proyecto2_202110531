@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Break_1 = __importDefault(require("./Break"));
 const Continue_1 = __importDefault(require("./Continue"));
@@ -44,17 +45,19 @@ class DoWhile extends __1.Instruction {
             for (let i of this.instructions) {
                 if (i instanceof Break_1.default)
                     return;
+                if (i instanceof Continue_1.default)
+                    continue;
                 let result = i.interpret(tree, newTable);
                 if (result instanceof Break_1.default) {
                     return;
                 }
                 if (result instanceof Continue_1.default) {
-                    break;
+                    continue;
                 }
                 if (result instanceof Return_1.default) {
                     return result;
                 }
-                if (result instanceof __1.Error) {
+                if (result instanceof Errors_1.default) {
                     return;
                 }
             }

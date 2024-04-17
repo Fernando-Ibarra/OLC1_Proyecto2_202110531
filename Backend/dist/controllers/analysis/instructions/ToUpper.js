@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class ToUpper extends __1.Instruction {
     constructor(exp, line, column) {
@@ -13,12 +14,12 @@ class ToUpper extends __1.Instruction {
     }
     interpret(tree, table) {
         let value = this.expression.interpret(tree, table);
-        if (value instanceof __1.Error)
+        if (value instanceof Errors_1.default)
             return value;
         if (value == null)
-            return new __1.Error('Semantico', `La variable ${value} no existe`, this.row, this.column);
+            return new Errors_1.default('Semantico', `La variable ${value} no existe`, this.row, this.column);
         if (this.expression.typeData.getTypeData() != __1.typeData.STRING) {
-            return new __1.Error('Semantico', `No se puede aplicar la función toupper a ${this.expression.typeData.getTypeData()}`, this.row, this.column);
+            return new Errors_1.default('Semantico', `No se puede aplicar la función toupper a ${this.expression.typeData.getTypeData()}`, this.row, this.column);
         }
         this.typeData = new TypeD_1.default(__1.typeData.STRING);
         return value.toLocaleUpperCase();

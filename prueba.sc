@@ -119,3 +119,12 @@ switch( edad ) {
     Default:
         cout << "default" << endl;
 }
+
+
+cout << "-----------------FOR--------------------" << endl;
+for(int i = 0; i<3; i++){
+    if ( i == 2) {
+        continue;
+    }
+    cout << i << endl;
+}

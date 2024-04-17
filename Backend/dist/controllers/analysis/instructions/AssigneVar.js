@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class AssigneVar extends __1.Instruction {
     constructor(id, line, column, exp) {
@@ -22,18 +23,18 @@ class AssigneVar extends __1.Instruction {
             if (!this.expression) {
                 let value = table.getVariable(id.toLocaleLowerCase());
                 if (value == null)
-                    return new __1.Error('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
                 this.typeData = value.getType();
             }
             else {
                 let NewValue = this.expression.interpret(tree, table);
-                if (NewValue instanceof __1.Error)
+                if (NewValue instanceof Errors_1.default)
                     return NewValue;
                 let value = table.getVariable(id.toLocaleLowerCase());
                 if (value == null)
-                    return new __1.Error('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
                 if (this.expression.typeData.getTypeData() != value.getType().getTypeData()) {
-                    return new __1.Error('Semantico', `No se puede asignar el tipo ${this.expression.typeData.getTypeData()} a ${value.getType().getTypeData()}`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `No se puede asignar el tipo ${this.expression.typeData.getTypeData()} a ${value.getType().getTypeData()}`, this.row, this.column);
                 }
                 this.typeData = value.getType();
                 value.setValue(NewValue);

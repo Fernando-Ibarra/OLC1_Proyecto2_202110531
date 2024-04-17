@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Break_1 = __importDefault(require("./Break"));
 class Switch extends __1.Instruction {
@@ -42,17 +43,17 @@ class Switch extends __1.Instruction {
     interpret(tree, table) {
         var _a, _b;
         let expression = this.expression.interpret(tree, table);
-        if (expression instanceof __1.Error)
+        if (expression instanceof Errors_1.default)
             return expression;
         (_a = this.cases) === null || _a === void 0 ? void 0 : _a.forEach(caseInstruction => {
             let expressionCase = caseInstruction.expression.interpret(tree, table);
-            if (expressionCase instanceof __1.Error)
+            if (expressionCase instanceof Errors_1.default)
                 return expressionCase;
             if (expressionCase == expression) {
                 let newTable = new __1.SymbolTable(table);
                 newTable.setName("Case Statement");
                 let result = caseInstruction.interpret(tree, newTable);
-                if (result instanceof __1.Error)
+                if (result instanceof Errors_1.default)
                     return result;
                 if (result instanceof Break_1.default) {
                     this.finished = true;
@@ -69,7 +70,7 @@ class Switch extends __1.Instruction {
             let newTable = new __1.SymbolTable(table);
             newTable.setName("Default Statement");
             let result = (_b = this.default) === null || _b === void 0 ? void 0 : _b.interpret(tree, newTable);
-            if (result instanceof __1.Error)
+            if (result instanceof Errors_1.default)
                 return result;
         }
     }

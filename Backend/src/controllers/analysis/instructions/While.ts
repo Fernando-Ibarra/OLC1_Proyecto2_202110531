@@ -1,4 +1,5 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
+import { Instruction, Symbol, SymbolTable, Tree } from '../';
+import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Break from './Break';
 import Continue from './Continue';
@@ -28,6 +29,7 @@ export default class While extends Instruction {
             let newTable = new SymbolTable(table);
             for (let i of this.instructions) {
                 if (i instanceof Break ) return;
+                if (i instanceof Continue) break;
                 let result = i.interpret(tree, newTable);
                 if (result instanceof Break) {
                     return;

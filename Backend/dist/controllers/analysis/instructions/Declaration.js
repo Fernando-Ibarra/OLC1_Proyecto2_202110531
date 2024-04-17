@@ -1,6 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 class Declaration extends __1.Instruction {
     constructor(typeV, row, column, id, value) {
         super(typeV, row, column);
@@ -17,19 +21,19 @@ class Declaration extends __1.Instruction {
             let id = this.id[i];
             if (!this.value) {
                 if (!table.setVariable(new __1.Symbol(this.typeData, id, null))) {
-                    return new __1.Error('Semantico', `La variable ${id} ya existe`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `La variable ${id} ya existe`, this.row, this.column);
                 }
                 return;
             }
             else {
                 let NewValue = this.value.interpret(tree, table);
-                if (NewValue instanceof __1.Error)
+                if (NewValue instanceof Errors_1.default)
                     return NewValue;
                 if (this.value.typeData.getTypeData() != this.typeData.getTypeData()) {
-                    return new __1.Error('Semantico', `No se puede asignar el tipo ${this.value.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `No se puede asignar el tipo ${this.value.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column);
                 }
                 if (!table.setVariable(new __1.Symbol(this.typeData, id, NewValue))) {
-                    return new __1.Error('Semantico', `La variable ${id} ya existe`, this.row, this.column);
+                    return new Errors_1.default('Semantico', `La variable ${id} ya existe`, this.row, this.column);
                 }
             }
         }

@@ -1,4 +1,5 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
+import { Instruction, Symbol, SymbolTable, Tree } from '../';
+import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Break from './Break';
 import Return from './Return';

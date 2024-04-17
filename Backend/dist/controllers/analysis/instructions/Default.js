@@ -22,8 +22,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 class Default extends __1.Instruction {
     constructor(instructions, row, column) {
@@ -34,10 +38,10 @@ class Default extends __1.Instruction {
         let newTable = new __1.SymbolTable(table);
         newTable.setName("Default Statement");
         for (let i of this.instructions) {
-            if (i instanceof __1.Error)
+            if (i instanceof Errors_1.default)
                 return i;
             let result = i.interpret(tree, newTable);
-            if (result instanceof __1.Error)
+            if (result instanceof Errors_1.default)
                 return result;
         }
     }

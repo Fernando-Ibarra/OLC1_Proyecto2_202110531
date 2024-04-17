@@ -1,0 +1,12 @@
+while (counter <= 6) { 
+    if( counter == 2 ) {
+        continue; // se sale
+    } else if (counter == 5) {
+        break; // lo termina
+    } else {
+        return; // error
+    }
+    
+    cout << "Current count: " << counter << endl;
+    counter++;
+}

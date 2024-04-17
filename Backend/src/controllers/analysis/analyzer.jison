@@ -1,4 +1,9 @@
 %{
+
+    let errores = [];
+
+    const Errores = require('./exceptions/Errors');
+
     const TypeD = require('./symbols/TypeD');
 
     const Aritmeticas = require('./expressions/Aritmeticas');
@@ -30,6 +35,7 @@
     const Switch = require('./instructions/Switch');
     const Case = require('./instructions/Case');
     const Default = require('./instructions/Default');
+
 %}
 
 // Lexical analysis
@@ -127,7 +133,7 @@
 // End of File
 <<EOF>>         return "EOF"
 
-.               return "UNEXPECTED_TOKEN"
+.               { errores.push(new Errores.default('Léxico', 'Caracter no valido: ' + yytext, yylineno, yyleng)); } 
 
 %{
 
@@ -174,6 +180,7 @@ INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
            | BREAK_S                                         { $$ = $1; }
            | CONTINUE_S                                      { $$ = $1; }
            | RETURN_S                                        { $$ = $1; }
+           | error INSTRUCTION         { errores.push(new Errores.default('Sintáctico', 'Error en la definición de instrucción', @1.first_line, @1.first_column));}
 ;
 
 PRINT: COUT DOUBLE_QUOTE EXPRESSION                         { $$ = new Cout.default($3, @1.first_line, @1.first_column, false); }
@@ -193,8 +200,8 @@ IDS: IDS COMMA ID                                           { $1.push($3); $$ = 
 ;
 
 IF_S: IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE                                    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
+    | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE IF_S                          { $$ = new If.default($3, $6, @1.first_line, @1.first_column, true, $9); }
     | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE LBRACE INSTRUCTIONS RBRACE    { $$ = new If.default($3, $6, @1.first_line, @1.first_column, true, $10); }
-    | IF LPAREN EXPRESSION RPAREN LBRACE INSTRUCTIONS RBRACE ELSE IF_S                          { $$ = new If.default($3, $6, @1.first_line, @1.first_column, false); }
 ;
 
 SWITCH_S: SWITCH LPAREN EXPRESSION RPAREN LBRACE CASELIST DEFAULT_S RBRACE { $$ = new Switch.default($3, @1.first_line, @1.first_column, $6, $7); }

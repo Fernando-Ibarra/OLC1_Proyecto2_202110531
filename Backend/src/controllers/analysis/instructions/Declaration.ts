@@ -1,4 +1,5 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
+import { Instruction, Symbol, SymbolTable, Tree } from '../';
+import Error from '../exceptions/Errors';
 import TypeD from '../symbols/TypeD';
 
 export default class Declaration extends Instruction {

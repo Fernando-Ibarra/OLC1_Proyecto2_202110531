@@ -1,4 +1,5 @@
-import { Error, Instruction, SymbolTable, Tree, typeData } from '../';
+import { Instruction, SymbolTable, Tree, typeData } from '../';
+import Error from '../exceptions/Errors';
 import TypeD from '../symbols/TypeD';
 
 export default class ToUpper extends Instruction{

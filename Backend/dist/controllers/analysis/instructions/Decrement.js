@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class Decrement extends __1.Instruction {
     constructor(id, line, column) {
@@ -14,9 +15,9 @@ class Decrement extends __1.Instruction {
     interpret(tree, table) {
         let value = table.getVariable(this.id.toLocaleLowerCase());
         if (value == null)
-            return new __1.Error('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
+            return new Errors_1.default('Semantico', `La variable ${this.id} no existe`, this.row, this.column);
         if (value.getType().getTypeData() != __1.typeData.INT) {
-            return new __1.Error('Semantico', `No se puede decrementar la variable ${this.id} porque no es de tipo number`, this.row, this.column);
+            return new Errors_1.default('Semantico', `No se puede decrementar la variable ${this.id} porque no es de tipo number`, this.row, this.column);
         }
         this.typeData = value.getType();
         value.setValue(parseInt(value.getValue()) - 1);

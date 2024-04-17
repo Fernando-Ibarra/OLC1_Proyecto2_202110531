@@ -1,4 +1,4 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
+import {Instruction, SymbolTable, Tree } from '../';
 import TypeD, { typeData } from '../symbols/TypeD';
 
 export default class Break extends Instruction {

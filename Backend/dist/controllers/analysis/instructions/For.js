@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Break_1 = __importDefault(require("./Break"));
 const Continue_1 = __importDefault(require("./Continue"));
@@ -43,29 +44,29 @@ class For extends __1.Instruction {
     interpret(tree, table) {
         let newTable = new __1.SymbolTable(table);
         let dec = this.declaration.interpret(tree, newTable);
-        if (dec instanceof __1.Error)
+        if (dec instanceof Errors_1.default)
             return dec;
         let cond = this.condition.interpret(tree, newTable);
-        if (cond instanceof __1.Error)
+        if (cond instanceof Errors_1.default)
             return cond;
         if (this.condition.typeData.getTypeData() != TypeD_1.typeData.BOOL) {
-            return new __1.Error("Semántico", "Se esperaba una expresión booleana en la condición del for", this.row, this.column);
+            return new Errors_1.default("Semántico", "Se esperaba una expresión booleana en la condición del for", this.row, this.column);
         }
         let conditionValue = this.condition.interpret(tree, newTable);
         while (conditionValue == true) {
             for (let i of this.instructions) {
-                console.log(i);
                 if (i instanceof Break_1.default)
                     return;
+                if (i instanceof Continue_1.default)
+                    break;
                 let result = i.interpret(tree, newTable);
-                console.log(result);
                 if (result instanceof Break_1.default) {
                     return;
                 }
                 if (result instanceof Continue_1.default) {
                     break;
                 }
-                if (result instanceof __1.Error) {
+                if (result instanceof Errors_1.default) {
                     return;
                 }
                 if (result instanceof Return_1.default) {
@@ -73,7 +74,7 @@ class For extends __1.Instruction {
                 }
             }
             let inc = this.increment.interpret(tree, newTable);
-            if (inc instanceof __1.Error)
+            if (inc instanceof Errors_1.default)
                 return inc;
             conditionValue = this.condition.interpret(tree, newTable);
         }

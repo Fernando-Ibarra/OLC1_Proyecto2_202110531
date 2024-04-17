@@ -1,4 +1,5 @@
-import { Error, Instruction, Symbol, SymbolTable, Tree } from '../';
+import { Instruction, Symbol, SymbolTable, Tree } from '../';
+import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Break from './Break';
 import Continue from './Continue';
@@ -36,10 +37,9 @@ export default class For extends Instruction {
 
         while(conditionValue == true) {
             for (let i of this.instructions) {
-                console.log(i);
                 if (i instanceof Break ) return;
+                if (i instanceof Continue) break;
                 let result = i.interpret(tree, newTable);
-                console.log(result);
                 if (result instanceof Break) {
                     return;
                 }

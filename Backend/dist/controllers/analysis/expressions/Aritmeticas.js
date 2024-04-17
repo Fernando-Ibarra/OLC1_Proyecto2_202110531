@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ArithmeticOption = void 0;
 const __1 = require("../");
+const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importDefault(require("../symbols/TypeD"));
 class Aritmeticas extends __1.Instruction {
     constructor(operator, row, column, leftOperand, rightOperand) {
@@ -24,15 +25,15 @@ class Aritmeticas extends __1.Instruction {
         let leftOp, rightOp, uniqueOp = null;
         if (this.uniqueOperand != null) {
             uniqueOp = this.uniqueOperand.interpret(tree, table);
-            if (uniqueOp instanceof __1.Error)
+            if (uniqueOp instanceof Errors_1.default)
                 return uniqueOp;
         }
         else {
             leftOp = (_a = this.leftOperand) === null || _a === void 0 ? void 0 : _a.interpret(tree, table);
-            if (leftOp instanceof __1.Error)
+            if (leftOp instanceof Errors_1.default)
                 return leftOp;
             rightOp = (_b = this.rightOperand) === null || _b === void 0 ? void 0 : _b.interpret(tree, table);
-            if (rightOp instanceof __1.Error)
+            if (rightOp instanceof Errors_1.default)
                 return rightOp;
         }
         switch (this.operator) {
@@ -51,7 +52,7 @@ class Aritmeticas extends __1.Instruction {
             case ArithmeticOption.NEGATIVE:
                 return this.negative(uniqueOp);
             default:
-                return new __1.Error('Semantico', `Operador aritmetico invalido`, this.row, this.column);
+                return new Errors_1.default('Semantico', `Operador aritmetico invalido`, this.row, this.column);
         }
     }
     plus(leftOp, rightOp) {
@@ -77,7 +78,7 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -97,7 +98,7 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
@@ -108,14 +109,14 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat((leftOp ? 1 : 0).toString()) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        return new __1.Error('Semantico', `No se puede realizar la suma entre valores booleanos`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        return new __1.Error('Semantico', `No se puede realizar la suma entre un valor booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma entre un valor booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return (leftOp ? 'true' : 'false') + rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
@@ -126,7 +127,7 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) + parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        return new __1.Error('Semantico', `No se puede realizar la suma entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
                     case __1.typeData.CHAR:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
@@ -134,7 +135,7 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
@@ -154,10 +155,10 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
                         return leftOp + rightOp;
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
             default:
-                return new __1.Error('Semantico', `No se puede realizar la suma`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
         }
     }
     minus(leftOp, rightOp) {
@@ -180,9 +181,9 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) - parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -199,9 +200,9 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) - parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
@@ -212,13 +213,13 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat((leftOp ? 1 : 0).toString()) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre valores booleanos`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un valor booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un valor booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un valor booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un valor booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
@@ -229,31 +230,31 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) - parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un caracter (${leftOp}) y un valor booleano`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        return new __1.Error('Semantico', `No se puede realizar la resta entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la resta entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la resta entre dos cadenas`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la resta entre dos cadenas`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
                 }
             default:
-                return new __1.Error('Semantico', `No se puede realizar la resta`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la resta`, this.row, this.column);
         }
     }
     times(leftOp, rightOp) {
@@ -270,14 +271,14 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
                         this.typeData = new TypeD_1.default(__1.typeData.INT);
                         return parseInt(leftOp) * parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -288,29 +289,29 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) * parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre valores booleanos`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
@@ -321,31 +322,31 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) * parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la multiplicación entre dos cadenas`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la multiplicación entre dos cadenas`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
                 }
             default:
-                new __1.Error('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
+                new Errors_1.default('Semantico', `No se puede realizar la multiplicación`, this.row, this.column);
         }
     }
     div(leftOp, rightOp) {
@@ -362,14 +363,14 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -380,29 +381,29 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) / parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la división entre valores booleanos`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
@@ -413,31 +414,31 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la división entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la división entre dos cadenas`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la división entre dos cadenas`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             default:
-                new __1.Error('Semantico', `No se puede realizar la división`, this.row, this.column);
+                new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
         }
     }
     mod(leftOp, rightOp) {
@@ -454,13 +455,13 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) % parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -471,61 +472,61 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp) % parseFloat(rightOp);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre valores booleanos`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre dos caracteres`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre dos caracteres`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar el módulo entre dos cadenas`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar el módulo entre dos cadenas`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
                 }
             default:
-                new __1.Error('Semantico', `No se puede realizar el módulo`, this.row, this.column);
+                new Errors_1.default('Semantico', `No se puede realizar el módulo`, this.row, this.column);
         }
     }
     power(leftOp, rightOp) {
@@ -542,13 +543,13 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return Math.pow(parseInt(leftOp), parseFloat(rightOp));
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
                 }
             case __1.typeData.FLOAT:
                 switch (secondOp) {
@@ -559,61 +560,61 @@ class Aritmeticas extends __1.Instruction {
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return Math.pow(parseFloat(leftOp), parseFloat(rightOp));
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un doble (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre valores booleanos`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre valores booleanos`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
                 }
             case __1.typeData.CHAR:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre dos caracteres`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre dos caracteres`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
                     case __1.typeData.FLOAT:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
                     case __1.typeData.BOOL:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
                     case __1.typeData.STRING:
-                        new __1.Error('Semantico', `No se puede realizar la potencia entre dos cadenas`, this.row, this.column);
+                        new Errors_1.default('Semantico', `No se puede realizar la potencia entre dos cadenas`, this.row, this.column);
                     default:
-                        return new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                        return new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
                 }
             default:
-                new __1.Error('Semantico', `No se puede realizar la potencia`, this.row, this.column);
+                new Errors_1.default('Semantico', `No se puede realizar la potencia`, this.row, this.column);
         }
     }
     negative(operand) {
@@ -627,13 +628,13 @@ class Aritmeticas extends __1.Instruction {
                 this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                 return -parseFloat(operand);
             case __1.typeData.BOOL:
-                return new __1.Error('Semantico', `No se puede realizar la negación de un valor booleano`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la negación de un valor booleano`, this.row, this.column);
             case __1.typeData.CHAR:
-                return new __1.Error('Semantico', `No se puede realizar la negación de un caracter`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la negación de un caracter`, this.row, this.column);
             case __1.typeData.STRING:
-                return new __1.Error('Semantico', `No se puede realizar la negación de una cadena`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la negación de una cadena`, this.row, this.column);
             default:
-                return new __1.Error('Semantico', `No se puede realizar la negación`, this.row, this.column);
+                return new Errors_1.default('Semantico', `No se puede realizar la negación`, this.row, this.column);
         }
     }
     ast(fatherNode) {
