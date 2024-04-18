@@ -35,6 +35,9 @@
     const Switch = require('./instructions/Switch');
     const Case = require('./instructions/Case');
     const Default = require('./instructions/Default');
+    const Execute = require('./instructions/Execute');
+    const Method = require('./instructions/Method');
+    const Call = require('./instructions/Call');
 
 %}
 
@@ -55,6 +58,7 @@
 "char"                  return  'CHAR_TYPE'
 "string"                return  'STRING_TYPE'
 "bool"                  return  'BOOL_TYPE'
+"void"                  return  'VOID_TYPE'
 "pow"                   return  'POW'
 "cout"                  return  'COUT'
 "new"                   return  'NEW'
@@ -180,6 +184,9 @@ INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
            | BREAK_S                                         { $$ = $1; }
            | CONTINUE_S                                      { $$ = $1; }
            | RETURN_S                                        { $$ = $1; }
+           | METHOD_S                                        { $$ = $1; }
+           | EXECUTE_S SEMICOLON                             { $$ = $1; }
+           | CALL_S SEMICOLON                                { $$ = $1; }
            | error INSTRUCTION         { errores.push(new Errores.default('Sintáctico', 'Error en la definición de instrucción', @1.first_line, @1.first_column));}
 ;
 
@@ -243,6 +250,28 @@ CONTINUE_S: CONTINUE  SEMICOLON                          { $$ = new Continue.def
 
 RETURN_S: RETURN  SEMICOLON                              { $$ = new Return.default(@1.first_line, @1.first_column); }
         | RETURN EXPRESSION SEMICOLON                    { $$ = new Return.default(@1.first_line, @1.first_column, $2); }
+;
+
+METHOD_S: TYPES ID LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Method.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
+        | TYPES ID LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
+;
+
+PARAMS_S: PARAMS_S COMMA TYPES ID                        { $1.push({ typeDa: $3, id: $4 }); $$ = $1; }
+        | TYPES ID                                       { $$ = [{ typeDa: $1, id: $2 }]; }
+;
+
+EXECUTE_S: EXECUTE ID LPAREN PARAMS_CALL RPAREN            { $$ = new Execute.default($2, @1.first_line, @1.first_column, $4); }
+         | EXECUTE ID LPAREN RPAREN                        { $$ = new Execute.default($2, @1.first_line, @1.first_column, []); }
+;
+
+
+CALL_S: ID LPAREN PARAMS_CALL RPAREN                     { $$ = new Call.default($1, @1.first_line, @1.first_column, $3); }
+      | ID LPAREN RPAREN                                 { $$ = new Call.default($1, @1.first_line, @1.first_column, []); }
+;
+
+
+PARAMS_CALL: PARAMS_CALL COMMA EXPRESSION               { $1.push($3); $$ = $1; }
+            | EXPRESSION                                 { $$ = [$1]; }
 ;
 
 ARRAY: TYPES IDS ARRAYBRACKET ASSIGN NEW TYPES EXPRESSION            { $$ = new DeclarationArr.default($1, $2, $7, @1.first_line, @1.first_column); }
@@ -309,4 +338,5 @@ TYPES : INT_TYPE                        {$$ = new TypeD.default(TypeD.typeData.I
       | STD COLON COLON STRING_TYPE     {$$ = new TypeD.default(TypeD.typeData.STRING);}
       | CHAR_TYPE                       {$$ = new TypeD.default(TypeD.typeData.CHAR);}
       | BOOL_TYPE                       {$$ = new TypeD.default(TypeD.typeData.BOOL);}
+      | VOID_TYPE                       {$$ = new TypeD.default(TypeD.typeData.VOID);}
 ;

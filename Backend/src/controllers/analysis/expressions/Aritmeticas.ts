@@ -138,16 +138,16 @@ export default class Aritmeticas extends Instruction {
                 switch (secondOp) {
                     case typeData.INT:
                         this.typeData = new TypeD(typeData.STRING);
-                        return leftOp + rightOp;
+                        return leftOp + rightOp.toString();
                     case typeData.FLOAT:
                         this.typeData = new TypeD(typeData.STRING);
-                        return leftOp + rightOp;
+                        return leftOp + rightOp.toString();
                     case typeData.BOOL:
                         this.typeData = new TypeD(typeData.STRING);
                         return leftOp + (rightOp ? 'true' : 'false');
                     case typeData.CHAR:
                         this.typeData = new TypeD(typeData.STRING);
-                        return leftOp + rightOp;
+                        return leftOp + rightOp.toString();
                     case typeData.STRING:
                         this.typeData = new TypeD(typeData.STRING);
                         return leftOp + rightOp;
