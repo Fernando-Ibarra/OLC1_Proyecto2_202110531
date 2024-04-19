@@ -32,9 +32,6 @@ class controller {
         astDot += "edge [arrowsize=1];\n";
         astDot += "edge [arrowhead=\"normal\"];\n";
         astDot += "edge [arrowtail=\"dot\"];\n";
-        astDot += "node0 [label=\"EXEC\"];\n";
-        astDot += "node1 [label=\"INSTRUCTIONS\"];\n";
-        astDot += "node0 -> node1;\n";
         try {
             const { code } = req.body;
             let parser = require('./analysis/analyzer');
@@ -51,6 +48,7 @@ class controller {
                 }
                 if (i instanceof Declaration_1.default) {
                     let result = i.interpret(ast, symbolTable);
+                    console.log(result);
                     if (result instanceof Error) {
                         console.log(result);
                     }
@@ -67,6 +65,7 @@ class controller {
                 if (result instanceof Error) {
                     console.log(result);
                 }
+                astDot += execute.ast("");
             }
             // for(let i of ast.getFunctions()){
             //     console.log(i);
@@ -76,7 +75,10 @@ class controller {
             //     console.log(result);
             // }
             astDot += "}";
+            console.log("---------TABLA--------");
             console.log(symbolTable);
+            console.log("---------CONSOLE--------");
+            console.log(ast.getConsole());
             res.status(201).json({
                 "codeOutput": ast.getConsole(),
                 "ast": astDot

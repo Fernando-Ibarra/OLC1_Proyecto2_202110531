@@ -9,21 +9,38 @@ const Return_1 = __importDefault(require("./Return"));
 class Method extends __1.Instruction {
     constructor(id, tipoV, instructions, row, column, params) {
         super(tipoV, row, column);
-        this.id = id;
+        this.id = id[0];
         this.params = params;
         this.instructions = instructions;
     }
     interpret(tree, table) {
+        console.log("this.instructions", this.instructions);
         for (let i of this.instructions) {
+            console.log("i Me", i);
             let result = i.interpret(tree, table);
+            console.log("result Me", result);
             if (result instanceof Errors_1.default)
                 return result;
             if (result instanceof Return_1.default)
                 break;
         }
     }
-    ast() {
-        return "";
+    ast(father) {
+        let ast = `node_${this.row}_${this.column}[label="Method"]\n`;
+        ast += `${father} -> node_${this.row}_${this.column}\n`;
+        ast += `node_${this.row}_${this.column}_1[label="id: ${this.id}"]\n`;
+        ast += `${father} -> node_${this.row}_${this.column}_1\n`;
+        ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
+        ast += `${father} -> node_${this.row}_${this.column}_2\n`;
+        for (let i of this.params) {
+            ast += i.ast(`node_${this.row}_${this.column}_2`);
+        }
+        ast += `node_${this.row}_${this.column}_3[label="instructions"]\n`;
+        ast += `${father} -> node_${this.row}_${this.column}_3\n`;
+        for (let i of this.instructions) {
+            ast += i.ast(`node_${this.row}_${this.column}_3`);
+        }
+        return ast;
     }
 }
 exports.default = Method;

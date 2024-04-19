@@ -4,7 +4,7 @@ export default class Error {
     private row: number;
     private column: number;
 
-    constructor(typeError: string, description: string, row: number, column: number) {
+    constructor(typeError: string, description: string, column: number, row: number) {
         this.typeError = typeError;
         this.description = description;
         this.row = row;

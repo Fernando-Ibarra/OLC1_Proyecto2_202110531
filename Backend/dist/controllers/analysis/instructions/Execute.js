@@ -34,23 +34,29 @@ const Method_1 = __importDefault(require("./Method"));
 class Execute extends __1.Instruction {
     constructor(id, row, column, params) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
-        this.id = id;
+        this.id = id[0];
         this.params = params;
     }
     interpret(tree, table) {
         let seek = tree.getFunction(this.id);
+        console.log("SEEK EXECUTE", seek);
         if (seek == null) {
             return new Errors_1.default('Semantico', `No existe la funcion`, this.row, this.column);
         }
         if (seek instanceof Method_1.default) {
-            let newTable = new __1.SymbolTable(tree.getGlobalTable());
+            console.log("GLOBAL TABLE", tree.getGlobalTable());
+            let newTable = new __1.SymbolTable(table);
             newTable.setName("Execute");
+            console.log("NEW TABLE", newTable);
             if (seek.params.length != this.params.length) {
                 return new Errors_1.default('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column);
             }
             for (let i = 0; i < seek.params.length; i++) {
-                let paramDeclared = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, seek.params[i].id, this.params[i]);
+                let paramDeclared = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i]);
+                console.log("paramDeclared", paramDeclared);
+                console.log("NEW TABLE", newTable);
                 let result = paramDeclared.interpret(tree, newTable);
+                console.log("result", result);
                 if (result instanceof Errors_1.default)
                     return result;
             }
@@ -60,7 +66,13 @@ class Execute extends __1.Instruction {
         }
     }
     ast(father) {
-        return "";
+        let ast = "node0 [label=\"EXEC\"];\n";
+        ast += "node1 [label=\"INSTRUCTIONS\"];\n";
+        ast += "node0 -> node1;\n";
+        for (let i of this.params) {
+            ast += i.ast("node1");
+        }
+        return ast;
     }
 }
 exports.default = Execute;

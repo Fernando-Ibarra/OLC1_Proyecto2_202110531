@@ -146,16 +146,17 @@
 /lex
 
 // precedence
+%left 'INTERROGATION' 'COLON'
 %left 'OR'
 %left 'AND'
+%left 'NOT'
 %left 'EQUALS' 'DIFFERENT' 'LESS' 'LESS_EQUAL' 'GREATER' 'GREATER_EQUAL' 
 %left 'PLUS' 'MINUS'
 %left 'DIVIDE' 'TIMES' 'MOD'
 %nonassoc 'POW'
 %right 'INCREMENT' 'DECREMENT'
-%right 'LPAREN'
+%left 'LPAREN'
 %right 'UMINUS'
-%right 'NOT'
 
 
 // start symbol
@@ -252,21 +253,21 @@ RETURN_S: RETURN  SEMICOLON                              { $$ = new Return.defau
         | RETURN EXPRESSION SEMICOLON                    { $$ = new Return.default(@1.first_line, @1.first_column, $2); }
 ;
 
-METHOD_S: TYPES ID LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Method.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
-        | TYPES ID LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
+METHOD_S: TYPES IDS LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Method.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
+        | TYPES IDS LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
 ;
 
 PARAMS_S: PARAMS_S COMMA TYPES ID                        { $1.push({ typeDa: $3, id: $4 }); $$ = $1; }
         | TYPES ID                                       { $$ = [{ typeDa: $1, id: $2 }]; }
 ;
 
-EXECUTE_S: EXECUTE ID LPAREN PARAMS_CALL RPAREN            { $$ = new Execute.default($2, @1.first_line, @1.first_column, $4); }
-         | EXECUTE ID LPAREN RPAREN                        { $$ = new Execute.default($2, @1.first_line, @1.first_column, []); }
+EXECUTE_S: EXECUTE IDS LPAREN PARAMS_CALL RPAREN            { $$ = new Execute.default($2, @1.first_line, @1.first_column, $4); }
+         | EXECUTE IDS LPAREN RPAREN                        { $$ = new Execute.default($2, @1.first_line, @1.first_column, []); }
 ;
 
 
-CALL_S: ID LPAREN PARAMS_CALL RPAREN                     { $$ = new Call.default($1, @1.first_line, @1.first_column, $3); }
-      | ID LPAREN RPAREN                                 { $$ = new Call.default($1, @1.first_line, @1.first_column, []); }
+CALL_S: IDS LPAREN PARAMS_CALL RPAREN                     { $$ = new Call.default($1, @1.first_line, @1.first_column, $3); }
+      | IDS LPAREN RPAREN                                 { $$ = new Call.default($1, @1.first_line, @1.first_column, []); }
 ;
 
 

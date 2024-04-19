@@ -76,7 +76,7 @@ class Aritmeticas extends __1.Instruction {
                         return parseInt(leftOp) + parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
-                        return leftOp + rightOp;
+                        return parseInt(leftOp) + parseInt(rightOp);
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
@@ -96,7 +96,7 @@ class Aritmeticas extends __1.Instruction {
                         return parseFloat(leftOp) + parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
-                        return leftOp + rightOp;
+                        return parseFloat(leftOp) + parseFloat(rightOp);
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
@@ -357,16 +357,16 @@ class Aritmeticas extends __1.Instruction {
             case __1.typeData.INT:
                 switch (secondOp) {
                     case __1.typeData.INT:
-                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
-                        return parseFloat(leftOp) / parseFloat(rightOp);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
+                        return parseInt(leftOp) / parseInt(rightOp);
                     case __1.typeData.FLOAT:
-                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
-                        return parseFloat(leftOp) / parseFloat(rightOp);
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
+                        return parseInt(leftOp) / parseFloat(rightOp);
                     case __1.typeData.BOOL:
                         new Errors_1.default('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
                     case __1.typeData.CHAR:
-                        this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
-                        return parseFloat(leftOp) / parseFloat(rightOp.charCodeAt(0).toString());
+                        this.typeData = new TypeD_1.default(__1.typeData.INT);
+                        return parseInt(leftOp) / parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         new Errors_1.default('Semantico', `No se puede realizar la división entre un entero (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
@@ -392,16 +392,6 @@ class Aritmeticas extends __1.Instruction {
                 }
             case __1.typeData.BOOL:
                 switch (secondOp) {
-                    case __1.typeData.INT:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
-                    case __1.typeData.FLOAT:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
-                    case __1.typeData.BOOL:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre valores booleanos`, this.row, this.column);
-                    case __1.typeData.CHAR:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
-                    case __1.typeData.STRING:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un booleano (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
@@ -409,31 +399,15 @@ class Aritmeticas extends __1.Instruction {
                 switch (secondOp) {
                     case __1.typeData.INT:
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
-                        return parseFloat(leftOp.charCodeAt(0).toString()) / parseFloat(rightOp);
+                        return parseFloat(leftOp.charCodeAt(0).toString()) / parseInt(rightOp);
                     case __1.typeData.FLOAT:
                         this.typeData = new TypeD_1.default(__1.typeData.FLOAT);
                         return parseFloat(leftOp.charCodeAt(0).toString()) / parseFloat(rightOp);
-                    case __1.typeData.BOOL:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
-                    case __1.typeData.CHAR:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre dos caracteres (${leftOp}, ${rightOp})`, this.row, this.column);
-                    case __1.typeData.STRING:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre un caracter (${leftOp}) y una cadena (${rightOp})`, this.row, this.column);
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }
             case __1.typeData.STRING:
                 switch (secondOp) {
-                    case __1.typeData.INT:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un entero (${rightOp})`, this.row, this.column);
-                    case __1.typeData.FLOAT:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un doble (${rightOp})`, this.row, this.column);
-                    case __1.typeData.BOOL:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un booleano (${rightOp})`, this.row, this.column);
-                    case __1.typeData.CHAR:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre una cadena (${leftOp}) y un caracter (${rightOp})`, this.row, this.column);
-                    case __1.typeData.STRING:
-                        new Errors_1.default('Semantico', `No se puede realizar la división entre dos cadenas`, this.row, this.column);
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la división`, this.row, this.column);
                 }

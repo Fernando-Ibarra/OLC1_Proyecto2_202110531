@@ -8,9 +8,9 @@ export default class Call extends Instruction {
     private id: string;
     private params: Instruction[];
 
-    constructor(id: string, row: number, column: number, params: Instruction[]) {
+    constructor(id: string[], row: number, column: number, params: Instruction[]) {
         super(new TypeD(typeData.VOID), row, column)
-        this.id = id
+        this.id = id[0]
         this.params = params
     }
 
@@ -21,7 +21,7 @@ export default class Call extends Instruction {
         }
 
         if ( seek instanceof Method ) {
-            let newTable = new SymbolTable(tree.getGlobalTable())
+            let newTable = new SymbolTable(table)
             newTable.setName("Llamada a método " + this.id)
 
             if( seek.params.length != this.params.length ) {
@@ -29,8 +29,13 @@ export default class Call extends Instruction {
             }
 
             for(let i=0; i < seek.params.length; i++) {
-                let param = new Declaration(seek.params[i].typeDa, this.row, this.column, seek.params[i].id, this.params[i])
+                console.log("i CALL", i)
+                console.log("SEEK", seek.params[i].id)
+                console.log("PARAMS", this.params[i])
+                let param = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i])
+                console.log("param CALL", param)
                 let result = param.interpret(tree, newTable)
+                console.log("result CALL", result)
                 if (result instanceof Error) return result
             }
 
@@ -41,6 +46,16 @@ export default class Call extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        return ""
+        let ast = `node_${this.row}_${this.column}[label="Call"]\n`
+        ast += `${fatherNode} -> node_${this.row}_${this.column}\n`
+        ast += `node_${this.row}_${this.column}_1[label="id: ${this.id}"]\n`
+        ast += `${fatherNode} -> node_${this.row}_${this.column}_1\n`
+        ast += `node_${this.row}_${this.column}_2[label="params"]\n`
+        ast += `${fatherNode} -> node_${this.row}_${this.column}_2\n`
+        for(let i of this.params) {
+            ast += i.ast(`node_${this.row}_${this.column}_2`)
+        }
+
+        return ast;
     }
 }

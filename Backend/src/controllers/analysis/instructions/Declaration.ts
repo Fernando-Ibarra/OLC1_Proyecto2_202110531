@@ -25,7 +25,9 @@ export default class Declaration extends Instruction {
                 }
                 return
             } else {
+                console.log("DECLARATION VALUE Be", this.value)
                 let NewValue = this.value.interpret(tree, table)
+                console.log("DECLARATION VALUE Af", NewValue)
                 if (NewValue instanceof Error) return NewValue
                 
                 if (this.value.typeData.getTypeData() != this.typeData.getTypeData()) {
@@ -35,6 +37,7 @@ export default class Declaration extends Instruction {
                 if (!table.setVariable(new Symbol(this.typeData, id, NewValue))) {
                     return new Error('Semantico', `La variable ${id} ya existe`, this.row, this.column)
                 }
+                console.log("TABLE DECLA", table)
             }
         }
         

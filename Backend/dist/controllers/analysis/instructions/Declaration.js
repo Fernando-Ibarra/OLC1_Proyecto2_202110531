@@ -26,7 +26,9 @@ class Declaration extends __1.Instruction {
                 return;
             }
             else {
+                console.log("DECLARATION VALUE Be", this.value);
                 let NewValue = this.value.interpret(tree, table);
+                console.log("DECLARATION VALUE Af", NewValue);
                 if (NewValue instanceof Errors_1.default)
                     return NewValue;
                 if (this.value.typeData.getTypeData() != this.typeData.getTypeData()) {
@@ -35,6 +37,7 @@ class Declaration extends __1.Instruction {
                 if (!table.setVariable(new __1.Symbol(this.typeData, id, NewValue))) {
                     return new Errors_1.default('Semantico', `La variable ${id} ya existe`, this.row, this.column);
                 }
+                console.log("TABLE DECLA", table);
             }
         }
     }

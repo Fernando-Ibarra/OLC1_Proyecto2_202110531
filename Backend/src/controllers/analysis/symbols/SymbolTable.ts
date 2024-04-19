@@ -51,9 +51,12 @@ export class SymbolTable {
 
     public getVariable(id: string) {
         for (let i: SymbolTable = this; i != null; i = i.getLastTable()) {
+            console.log(`i GET VARIABLES ${ id }`, i)
             let founded: Symbol = <Symbol>i.getCurrentTable().get(id.toLocaleLowerCase());
+            console.log(`founded GET VARIABLES ${ id }`, founded)
             if (founded != null) return founded;
         }
         return null;
     }
+    
 }

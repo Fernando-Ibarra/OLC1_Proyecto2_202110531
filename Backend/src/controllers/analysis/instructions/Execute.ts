@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import { Instruction, Symbol, SymbolTable, Tree } from '../';
 import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
@@ -8,29 +9,35 @@ export default class Execute extends Instruction {
     private id: string;
     private params: Instruction[];
 
-    constructor(id: string, row: number, column: number, params: Instruction[]) {
+    constructor(id: string[], row: number, column: number, params: Instruction[]) {
         super(new TypeD(typeData.VOID), row, column)
-        this.id = id
+        this.id = id[0]
         this.params = params
     }
 
     interpret(tree: Tree, table: SymbolTable) {
         let seek = tree.getFunction(this.id)
+        console.log("SEEK EXECUTE", seek)
         if (seek == null) {
             return new Error('Semantico', `No existe la funcion`, this.row, this.column)
         }
 
         if ( seek instanceof Method ) {
-            let newTable = new SymbolTable(tree.getGlobalTable())
+            console.log("GLOBAL TABLE", tree.getGlobalTable())
+            let newTable = new SymbolTable(table)
             newTable.setName("Execute")
+            console.log("NEW TABLE", newTable)
 
             if( seek.params.length != this.params.length ) {
                 return new Error('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column)
             }
 
             for(let i=0; i < seek.params.length; i++) {
-                let paramDeclared = new Declaration(seek.params[i].typeDa, this.row, this.column, seek.params[i].id, this.params[i])
+                let paramDeclared = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i])
+                console.log("paramDeclared", paramDeclared)
+                console.log("NEW TABLE", newTable)
                 let result = paramDeclared.interpret(tree, newTable)
+                console.log("result", result)
                 if (result instanceof Error) return result
             }
 
@@ -41,6 +48,13 @@ export default class Execute extends Instruction {
     }
 
     ast(father: string) {
-        return ""
+        let ast = "node0 [label=\"EXEC\"];\n"
+        ast += "node1 [label=\"INSTRUCTIONS\"];\n"
+        ast += "node0 -> node1;\n"
+
+        for(let i of this.params) {
+            ast += i.ast("node1")
+        }
+        return ast
     }
 }

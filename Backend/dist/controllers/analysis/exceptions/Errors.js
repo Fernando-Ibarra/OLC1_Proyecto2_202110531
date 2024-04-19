@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Error {
-    constructor(typeError, description, row, column) {
+    constructor(typeError, description, column, row) {
         this.typeError = typeError;
         this.description = description;
         this.row = row;

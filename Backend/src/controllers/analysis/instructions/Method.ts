@@ -8,22 +8,40 @@ export default class Method extends Instruction {
     public params: any[];
     public instructions: Instruction[];
 
-    constructor(id: string, tipoV: TypeD, instructions: Instruction[], row: number, column: number, params: any[]) {
+    constructor(id: string[], tipoV: TypeD, instructions: Instruction[], row: number, column: number, params: any[]) {
         super(tipoV, row, column)
-        this.id = id
+        this.id = id[0]
         this.params = params
         this.instructions = instructions
     }
 
     interpret(tree: Tree, table: SymbolTable) {
+        console.log("this.instructions", this.instructions)
         for( let i of this.instructions) {
+            console.log("i Me", i)
             let result = i.interpret(tree, table)
+            console.log("result Me", result)
             if (result instanceof Error) return result;
             if (result instanceof Return) break;
         }
     }
 
-    ast() {
-        return ""
+    ast(father: string) {
+        let ast = `node_${this.row}_${this.column}[label="Method"]\n`
+        ast += `${father} -> node_${this.row}_${this.column}\n`
+        ast += `node_${this.row}_${this.column}_1[label="id: ${this.id}"]\n`
+        ast += `${father} -> node_${this.row}_${this.column}_1\n`
+        ast += `node_${this.row}_${this.column}_2[label="params"]\n`
+        ast += `${father} -> node_${this.row}_${this.column}_2\n`
+        for(let i of this.params) {
+            ast += i.ast(`node_${this.row}_${this.column}_2`)
+        }
+        ast += `node_${this.row}_${this.column}_3[label="instructions"]\n`
+        ast += `${father} -> node_${this.row}_${this.column}_3\n`
+        for(let i of this.instructions) {
+            ast += i.ast(`node_${this.row}_${this.column}_3`)
+        }
+        
+        return ast
     }
 }
