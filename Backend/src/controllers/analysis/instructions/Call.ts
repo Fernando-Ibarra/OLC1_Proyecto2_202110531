@@ -2,6 +2,7 @@ import { Instruction, Symbol, SymbolTable, Tree } from '../';
 import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Declaration from './Declaration';
+import Functions from './Functions';
 import Method from './Method';
 
 export default class Call extends Instruction {
@@ -21,7 +22,7 @@ export default class Call extends Instruction {
         }
 
         if ( seek instanceof Method ) {
-            let newTable = new SymbolTable(table)
+            let newTable = new SymbolTable(tree.getGlobalTable())
             newTable.setName("Llamada a método " + this.id)
 
             if( seek.params.length != this.params.length ) {
@@ -29,14 +30,23 @@ export default class Call extends Instruction {
             }
 
             for(let i=0; i < seek.params.length; i++) {
-                console.log("i CALL", i)
-                console.log("SEEK", seek.params[i].id)
-                console.log("PARAMS", this.params[i])
-                let param = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i])
-                console.log("param CALL", param)
+                let param = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id])
+                
                 let result = param.interpret(tree, newTable)
-                console.log("result CALL", result)
                 if (result instanceof Error) return result
+
+                let value = this.params[i].interpret(tree, table)
+                if (value instanceof Error) return value
+
+                let updateVar = newTable.getVariable(seek.params[i].id)
+                if (updateVar == null) {
+                    return new Error('Semantico', `No existe la variable ${seek.params[i].id}`, this.row, this.column)
+                }
+                if (updateVar.getType().getTypeData() != this.params[i].typeData.getTypeData() ) {
+                    return new Error('Semantico', `El tipo de dato no coincide con el parametro`, this.row, this.column)
+                }
+
+                updateVar.setValue(value)
             }
 
             let result: any = seek.interpret(tree, newTable)

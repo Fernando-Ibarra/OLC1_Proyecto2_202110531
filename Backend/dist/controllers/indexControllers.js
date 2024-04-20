@@ -48,7 +48,6 @@ class controller {
                 }
                 if (i instanceof Declaration_1.default) {
                     let result = i.interpret(ast, symbolTable);
-                    console.log(result);
                     if (result instanceof Error) {
                         console.log(result);
                     }

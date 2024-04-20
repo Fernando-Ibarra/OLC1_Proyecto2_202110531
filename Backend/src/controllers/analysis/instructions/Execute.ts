@@ -4,6 +4,7 @@ import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
 import Declaration from './Declaration';
 import Method from './Method';
+import Functions from './Functions';
 
 export default class Execute extends Instruction {
     private id: string;
@@ -17,16 +18,13 @@ export default class Execute extends Instruction {
 
     interpret(tree: Tree, table: SymbolTable) {
         let seek = tree.getFunction(this.id)
-        console.log("SEEK EXECUTE", seek)
         if (seek == null) {
             return new Error('Semantico', `No existe la funcion`, this.row, this.column)
         }
 
         if ( seek instanceof Method ) {
-            console.log("GLOBAL TABLE", tree.getGlobalTable())
-            let newTable = new SymbolTable(table)
+            let newTable = new SymbolTable(tree.getGlobalTable())
             newTable.setName("Execute")
-            console.log("NEW TABLE", newTable)
 
             if( seek.params.length != this.params.length ) {
                 return new Error('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column)
@@ -34,16 +32,12 @@ export default class Execute extends Instruction {
 
             for(let i=0; i < seek.params.length; i++) {
                 let paramDeclared = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i])
-                console.log("paramDeclared", paramDeclared)
-                console.log("NEW TABLE", newTable)
                 let result = paramDeclared.interpret(tree, newTable)
-                console.log("result", result)
                 if (result instanceof Error) return result
             }
 
             let result: any = seek.interpret(tree, newTable)
             if (result instanceof Error) return result
-
         }
     }
 

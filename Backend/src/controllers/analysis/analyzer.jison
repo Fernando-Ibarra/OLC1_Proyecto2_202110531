@@ -37,6 +37,7 @@
     const Default = require('./instructions/Default');
     const Execute = require('./instructions/Execute');
     const Method = require('./instructions/Method');
+    const Functions = require('./instructions/Functions');
     const Call = require('./instructions/Call');
 
 %}
@@ -48,9 +49,9 @@
 
 %%
 
-// Coments
-[/][/].*[\n]    /* ignore */    {}
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]    /* ignore */    {}
+\s+                                 
+"//"[^\r\n]*[\r|\n|\r\n]?			{}
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]              {}
 
 // reserved words
 "int"                   return  'INT_TYPE'
@@ -253,8 +254,8 @@ RETURN_S: RETURN  SEMICOLON                              { $$ = new Return.defau
         | RETURN EXPRESSION SEMICOLON                    { $$ = new Return.default(@1.first_line, @1.first_column, $2); }
 ;
 
-METHOD_S: TYPES IDS LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Method.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
-        | TYPES IDS LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
+METHOD_S: VOID_TYPE IDS LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Method.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
+        | VOID_TYPE IDS LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
 ;
 
 PARAMS_S: PARAMS_S COMMA TYPES ID                        { $1.push({ typeDa: $3, id: $4 }); $$ = $1; }
@@ -339,5 +340,4 @@ TYPES : INT_TYPE                        {$$ = new TypeD.default(TypeD.typeData.I
       | STD COLON COLON STRING_TYPE     {$$ = new TypeD.default(TypeD.typeData.STRING);}
       | CHAR_TYPE                       {$$ = new TypeD.default(TypeD.typeData.CHAR);}
       | BOOL_TYPE                       {$$ = new TypeD.default(TypeD.typeData.BOOL);}
-      | VOID_TYPE                       {$$ = new TypeD.default(TypeD.typeData.VOID);}
 ;

@@ -17,8 +17,6 @@ class AccessVar extends __1.Instruction {
             return new Errors_1.default('Semantico', `Acceso invalido`, this.row, this.column);
         }
         this.typeData = valueVar.getType();
-        console.log("valueVar", valueVar);
-        console.log("valueVar", valueVar.getValue());
         return valueVar.getValue();
     }
     ast(father) {

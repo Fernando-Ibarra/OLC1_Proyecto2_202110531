@@ -38,9 +38,7 @@ class SymbolTable {
     }
     getVariable(id) {
         for (let i = this; i != null; i = i.getLastTable()) {
-            console.log(`i GET VARIABLES ${id}`, i);
             let founded = i.getCurrentTable().get(id.toLocaleLowerCase());
-            console.log(`founded GET VARIABLES ${id}`, founded);
             if (founded != null)
                 return founded;
         }

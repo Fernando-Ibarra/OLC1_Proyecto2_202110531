@@ -3,9 +3,9 @@ import { Tree, SymbolTable } from './'
 import Method from './analysis/instructions/Method';
 import Declaration from './analysis/instructions/Declaration';
 import Execute from './analysis/instructions/Execute';
+import Functions from './analysis/instructions/Functions';
 
 class controller {
-    
 
     public index(req: Request, res: Response) {
         res.status(201).json({ "message": 'System is running...'});
@@ -43,14 +43,13 @@ class controller {
 
             for(let i of ast.getInstructions()){
 
-                if (i instanceof Method ) {
+                if (i instanceof Method) {
                     i.id = i.id.toLocaleLowerCase();
                     ast.addFunction(i);
                 }
 
                 if( i instanceof Declaration ) {
                     let result = i.interpret(ast, symbolTable);
-                    console.log(result);
                     if (result instanceof Error) {
                         console.log(result);
                     }

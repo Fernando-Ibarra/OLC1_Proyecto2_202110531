@@ -76,7 +76,7 @@ class Aritmeticas extends __1.Instruction {
                         return parseInt(leftOp) + parseInt(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
-                        return parseInt(leftOp) + parseInt(rightOp);
+                        return parseInt(leftOp) + rightOp;
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }
@@ -96,7 +96,7 @@ class Aritmeticas extends __1.Instruction {
                         return parseFloat(leftOp) + parseFloat(rightOp.charCodeAt(0).toString());
                     case __1.typeData.STRING:
                         this.typeData = new TypeD_1.default(__1.typeData.STRING);
-                        return parseFloat(leftOp) + parseFloat(rightOp);
+                        return parseFloat(leftOp) + rightOp;
                     default:
                         return new Errors_1.default('Semantico', `No se puede realizar la suma`, this.row, this.column);
                 }

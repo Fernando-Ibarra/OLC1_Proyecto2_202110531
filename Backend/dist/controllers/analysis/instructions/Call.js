@@ -43,21 +43,27 @@ class Call extends __1.Instruction {
             return new Errors_1.default('Semantico', `No existe la funcion`, this.row, this.column);
         }
         if (seek instanceof Method_1.default) {
-            let newTable = new __1.SymbolTable(table);
+            let newTable = new __1.SymbolTable(tree.getGlobalTable());
             newTable.setName("Llamada a método " + this.id);
             if (seek.params.length != this.params.length) {
                 return new Errors_1.default('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column);
             }
             for (let i = 0; i < seek.params.length; i++) {
-                console.log("i CALL", i);
-                console.log("SEEK", seek.params[i].id);
-                console.log("PARAMS", this.params[i]);
-                let param = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i]);
-                console.log("param CALL", param);
+                let param = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id]);
                 let result = param.interpret(tree, newTable);
-                console.log("result CALL", result);
                 if (result instanceof Errors_1.default)
                     return result;
+                let value = this.params[i].interpret(tree, table);
+                if (value instanceof Errors_1.default)
+                    return value;
+                let updateVar = newTable.getVariable(seek.params[i].id);
+                if (updateVar == null) {
+                    return new Errors_1.default('Semantico', `No existe la variable ${seek.params[i].id}`, this.row, this.column);
+                }
+                if (updateVar.getType().getTypeData() != this.params[i].typeData.getTypeData()) {
+                    return new Errors_1.default('Semantico', `El tipo de dato no coincide con el parametro`, this.row, this.column);
+                }
+                updateVar.setValue(value);
             }
             let result = seek.interpret(tree, newTable);
             if (result instanceof Errors_1.default)
