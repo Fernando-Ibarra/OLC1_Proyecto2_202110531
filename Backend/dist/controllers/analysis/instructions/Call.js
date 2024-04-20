@@ -78,7 +78,7 @@ class Call extends __1.Instruction {
         ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
         ast += `${fatherNode} -> node_${this.row}_${this.column}_2\n`;
         for (let i of this.params) {
-            ast += i.ast(`node_${this.row}_${this.column}_2`);
+            // ast += i.ast(`node_${this.row}_${this.column}_2`)
         }
         return ast;
     }

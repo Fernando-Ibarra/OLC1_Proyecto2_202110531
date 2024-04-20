@@ -51,11 +51,25 @@ class Declaration extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let ast = 'node' + this.row + '_' + this.column + '[label="\\<Instruccion\\>\\nDeclaracion"];\n';
-        ast += fatherNode + ' -> node' + this.row + '_' + this.column + ';\n';
+        let newFather = `node_Declaration${this.row}_${this.column}`;
+        let ast = `${newFather}[label="DECLARATION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_Declaration${this.row}_${this.column}_ID [label="ID"]\n`;
+        ast += `node_Declaration${this.row}_${this.column}_TYPE [label="TYPE"]\n`;
+        ast += `node_Declaration${this.row}_${this.column}_VALUE [label="VALUE"]\n`;
+        ast += `node_Declaration${this.row}_${this.column}_SC [label=";"]\n`;
+        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_ID\n`;
+        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_TYPE\n`;
+        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_VALUE\n`;
+        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_SC\n`;
+        for (let i of this.id) {
+            ast += `node_Declaration${this.row}_${this.column}_ID${i} [label="${i}"]\n`;
+            ast += `node_Declaration${this.row}_${this.column}_ID -> node_Declaration${this.row}_${this.column}_ID${i}\n`;
+        }
+        ast += `node_Declaration${this.row}_${this.column}_TYPE${this.typeData.getTypeData()} [label="${this.typeData.getTypeData()}"]\n`;
+        ast += `node_Declaration${this.row}_${this.column}_TYPE -> node_Declaration${this.row}_${this.column}_TYPE${this.typeData.getTypeData()}\n`;
         if (this.value) {
-            ast += 'node' + this.row + '_' + this.column + ' -> node' + this.value.row + '_' + this.value.column + ';\n';
-            ast += this.value.ast('node' + this.row + '_' + this.column);
+            ast += this.value.ast(`node_Declaration${this.row}_${this.column}_VALUE`);
         }
         return ast;
     }

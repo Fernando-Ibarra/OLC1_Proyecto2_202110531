@@ -30,7 +30,7 @@ class Method extends __1.Instruction {
         ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
         ast += `${father} -> node_${this.row}_${this.column}_2\n`;
         for (let i of this.params) {
-            ast += i.ast(`node_${this.row}_${this.column}_2`);
+            // ast += i.ast(`node_${this.row}_${this.column}_2`)
         }
         ast += `node_${this.row}_${this.column}_3[label="instructions"]\n`;
         ast += `${father} -> node_${this.row}_${this.column}_3\n`;

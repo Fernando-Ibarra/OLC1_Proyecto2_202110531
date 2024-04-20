@@ -31,6 +31,10 @@ class controller {
         astDot += "edge [arrowsize=1];\n";
         astDot += "edge [arrowhead=\"normal\"];\n";
         astDot += "edge [arrowtail=\"dot\"];\n";
+        astDot += "node0 [label=\"ROOT\"];\n";
+        astDot += "node1 [label=\"INSTRUCTIONS\"];\n";
+        astDot += "node0 -> node1;\n";
+
         try {
             const { code } = req.body;
             let parser = require('./analysis/analyzer');
@@ -56,13 +60,12 @@ class controller {
                 }
 
                 if (i instanceof Execute ) {
-                    // TODO: just one execute
                     execute = i;
                 }
 
-                // var astGraph = i.ast("node1");
-                // astDot += astGraph;
-
+                console.log(i);
+                var astGraph = i.ast("node1");
+                astDot += astGraph;
             }
 
             if (execute != null) {
@@ -70,22 +73,17 @@ class controller {
                 if (result instanceof Error) {
                     console.log(result);
                 }
-                astDot += execute.ast("");
             }
 
-            // for(let i of ast.getFunctions()){
-            //     console.log(i);
-            //     var result = i.interpret(ast, symbolTable);
-            //     
-            //     astDot += astGraph;
-            //     console.log(result);
-            // }
 
             astDot += "}";
+
+            
             console.log("---------TABLA--------")
             console.log(symbolTable);
             console.log("---------CONSOLE--------")
             console.log(ast.getConsole());
+
             res.status(201).json({
                 "codeOutput": ast.getConsole(),
                 "ast": astDot

@@ -59,13 +59,28 @@ class Execute extends __1.Instruction {
                 return result;
         }
     }
-    ast(father) {
-        let ast = "node0 [label=\"EXEC\"];\n";
-        ast += "node1 [label=\"INSTRUCTIONS\"];\n";
-        ast += "node0 -> node1;\n";
+    ast(fatherNode) {
+        let newFather = `node_Execute${this.row}_${this.column}`;
+        let ast = `${newFather}[label="EXECUTE INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_Execute${this.row}_${this.column}_EX [label="Execute"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_ID[label="ID"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_LP[label="("]\n`;
+        ast += `node_Execute${this.row}_${this.column}_RP[label=")"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_PARM[label="PARAMS"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_SC[label=";"]\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_EX\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_ID\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_RP\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_PARM\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_LP\n`;
+        ast += `${newFather} -> node_Execute${this.row}_${this.column}_SC\n`;
         for (let i of this.params) {
-            ast += i.ast("node1");
+            ast += `node_Execute${this.row}_${this.column}_PARM_VAL${i} [label="${this.params}"]\n`;
+            ast += `node_Execute${this.row}_${this.column}_PARM -> node_Execute${this.row}_${this.column}_PARM_VAL${i}`;
         }
+        ast += `node_ID${this.row}_${this.column} [label="${this.id}"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_ID -> node_ID${this.row}_${this.column}\n`;
         return ast;
     }
 }
