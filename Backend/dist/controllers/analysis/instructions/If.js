@@ -79,7 +79,7 @@ class If extends __1.Instruction {
             if (this.elseIf) {
                 let newTableElse = new __1.SymbolTable(table);
                 newTableElse.setName("else Statement");
-                if (this.instructionsElse) {
+                if (Array.isArray(this.instructionsElse)) {
                     for (let i of this.instructionsElse) {
                         if (i instanceof Break_1.default)
                             return i;
@@ -96,6 +96,13 @@ class If extends __1.Instruction {
                             return result;
                         if (result instanceof Errors_1.default)
                             return result;
+                    }
+                }
+                else {
+                    if (this.instructionsElse != undefined) {
+                        let newTableElse = new __1.SymbolTable(table);
+                        newTableElse.setName("else if Statement");
+                        let result = this.instructionsElse.interpret(tree, newTableElse);
                     }
                 }
             }
@@ -115,9 +122,9 @@ class If extends __1.Instruction {
             ast += `node_If${this.nodeName}_2[label="Else"]\n`;
             ast += `${newFather} -> node_If${this.nodeName}_2\n`;
             if (this.instructionsElse) {
-                for (let i of this.instructionsElse) {
-                    ast += i.ast(`node_If${this.nodeName}_2`);
-                }
+                // for (let i of this.instructionsElse) {
+                //     ast += i.ast(`node_If${this.nodeName}_2`);
+                // }
             }
         }
         return ast;

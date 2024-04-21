@@ -4,11 +4,12 @@ import TypeD, { typeData } from '../symbols/TypeD';
 import Break from './Break';
 import Return from './Return';
 import Continue from './Continue';
+import { isArray } from 'util';
 
 export default class If extends Instruction {
     private condition: Instruction;
     private instructions: Instruction[];
-    private instructionsElse: Instruction[] | undefined;
+    private instructionsElse: Instruction[] | Instruction | undefined;
     private elseIf: boolean;
     private nodeName: string;
 
@@ -53,7 +54,7 @@ export default class If extends Instruction {
             if (this.elseIf) {
                 let newTableElse = new SymbolTable(table);
                 newTableElse.setName("else Statement");
-                if (this.instructionsElse) {
+                if ( Array.isArray(this.instructionsElse) ) {
                     for (let i of this.instructionsElse) {
                         if (i instanceof Break) return i;
                         if (i instanceof Continue) return i;
@@ -63,6 +64,12 @@ export default class If extends Instruction {
                         if (result instanceof Return) return result;
                         if (result instanceof Continue) return result;
                         if (result instanceof Error) return result;
+                    }
+                } else {
+                    if ( this.instructionsElse != undefined ) {
+                        let newTableElse = new SymbolTable(table);
+                        newTableElse.setName("else if Statement");
+                        let result = this.instructionsElse.interpret(tree, newTableElse);
                     }
                 }
             }
@@ -83,9 +90,9 @@ export default class If extends Instruction {
             ast += `node_If${this.nodeName}_2[label="Else"]\n`;
             ast += `${newFather} -> node_If${this.nodeName}_2\n`;
             if (this.instructionsElse) {
-                for (let i of this.instructionsElse) {
-                    ast += i.ast(`node_If${this.nodeName}_2`);
-                }
+                // for (let i of this.instructionsElse) {
+                //     ast += i.ast(`node_If${this.nodeName}_2`);
+                // }
             }
         }
         return ast;

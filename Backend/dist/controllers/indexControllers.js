@@ -63,8 +63,8 @@ class controller {
                 execute = i;
             }
             console.log(i);
-            // var astGraph = i.ast("node1");
-            // astDot += astGraph;
+            var astGraph = i.ast("node1");
+            astDot += astGraph;
         }
         if (execute != null) {
             let result = execute.interpret(ast, symbolTable);

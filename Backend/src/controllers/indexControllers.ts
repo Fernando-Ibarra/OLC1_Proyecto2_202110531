@@ -68,8 +68,8 @@ class controller {
                 }
 
                 console.log(i);
-                // var astGraph = i.ast("node1");
-                // astDot += astGraph;
+                var astGraph = i.ast("node1");
+                astDot += astGraph;
             }
 
             if (execute != null) {
