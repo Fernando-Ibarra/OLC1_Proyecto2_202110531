@@ -123,13 +123,13 @@ case 29:
  $$[$0-2].push($$[$0]); this.$ = $$[$0-2];
 break;
 case 31:
- this.$ = new If.default($$[$0-8], $$[$0-5], _$[$0-10].first_line, _$[$0-10].first_column, true, $$[$0-1]); 
+ this.$ = new If.default($$[$0-8], $$[$0-5], _$[$0-10].first_line, _$[$0-10].first_column, $$[$0-1]); 
 break;
 case 32:
- this.$ = new If.default($$[$0-6], $$[$0-3], _$[$0-8].first_line, _$[$0-8].first_column, false, $$[$0]); 
+ this.$ = new If.default($$[$0-6], $$[$0-3], _$[$0-8].first_line, _$[$0-8].first_column, $$[$0]); 
 break;
 case 33:
- this.$ = new If.default($$[$0-4], $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column, false); 
+ this.$ = new If.default($$[$0-4], $$[$0-1], _$[$0-6].first_line, _$[$0-6].first_column); 
 break;
 case 34:
  this.$ = new Switch.default($$[$0-5], _$[$0-7].first_line, _$[$0-7].first_column, $$[$0-2], $$[$0-1]); 

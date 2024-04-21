@@ -36,7 +36,6 @@ class Return extends __1.Instruction {
     }
     interpret(tree, table) {
         if (this.expression) {
-            console.log("RETURN - EXPRESSION", this.expression);
             let result = this.expression.interpret(tree, table);
             if (result instanceof Error)
                 return result;
@@ -46,7 +45,6 @@ class Return extends __1.Instruction {
                     return valueCall;
                 return valueCall;
             }
-            console.log("RETURN - RESULT", result);
             return result;
         }
         else {
@@ -59,7 +57,7 @@ class Return extends __1.Instruction {
             ast += `node_Return${this.row}_${this.column} -> node_Expression${this.expression.row}_${this.expression.column}\n`;
             ast += this.expression.ast(`Return${this.row}_${this.column}`);
         }
-        ast += `node_${fatherNode} -> node_Return${this.row}_${this.column}\n`;
+        ast += `${fatherNode} -> node_Return${this.row}_${this.column}\n`;
         return ast;
     }
 }

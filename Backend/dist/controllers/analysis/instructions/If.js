@@ -33,12 +33,11 @@ const Break_1 = __importDefault(require("./Break"));
 const Return_1 = __importDefault(require("./Return"));
 const Continue_1 = __importDefault(require("./Continue"));
 class If extends __1.Instruction {
-    constructor(condition, instructions, row, column, elseIf = false, instructionsElse) {
+    constructor(condition, instructions, row, column, instructionsElse) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
         this.instructionsElse = instructionsElse;
-        this.elseIf = elseIf;
         this.nodeName = `If${row}_${column}`;
     }
     interpret(tree, table) {
@@ -55,7 +54,6 @@ class If extends __1.Instruction {
                 if (i instanceof Break_1.default)
                     return i;
                 if (i instanceof Return_1.default) {
-                    console.log("RETURN - IF", i);
                     return i;
                 }
                 ;
@@ -65,7 +63,6 @@ class If extends __1.Instruction {
                 if (result instanceof Break_1.default)
                     return result;
                 if (result instanceof Return_1.default) {
-                    console.log("RETURN - RESULT - IF", result);
                     return result;
                 }
                 ;
@@ -76,34 +73,33 @@ class If extends __1.Instruction {
             }
         }
         else {
-            if (this.elseIf) {
+            if (Array.isArray(this.instructionsElse)) {
                 let newTableElse = new __1.SymbolTable(table);
                 newTableElse.setName("else Statement");
-                if (Array.isArray(this.instructionsElse)) {
-                    for (let i of this.instructionsElse) {
-                        if (i instanceof Break_1.default)
-                            return i;
-                        if (i instanceof Continue_1.default)
-                            return i;
-                        if (i instanceof Return_1.default)
-                            return i;
-                        let result = i.interpret(tree, newTableElse);
-                        if (result instanceof Break_1.default)
-                            return result;
-                        if (result instanceof Return_1.default)
-                            return result;
-                        if (result instanceof Continue_1.default)
-                            return result;
-                        if (result instanceof Errors_1.default)
-                            return result;
-                    }
+                for (let i of this.instructionsElse) {
+                    if (i instanceof Break_1.default)
+                        return i;
+                    if (i instanceof Continue_1.default)
+                        return i;
+                    if (i instanceof Return_1.default)
+                        return i;
+                    let result = i.interpret(tree, newTableElse);
+                    if (result instanceof Break_1.default)
+                        return result;
+                    if (result instanceof Return_1.default)
+                        return result;
+                    if (result instanceof Continue_1.default)
+                        return result;
+                    if (result instanceof Errors_1.default)
+                        return result;
                 }
-                else {
-                    if (this.instructionsElse != undefined) {
-                        let newTableElse = new __1.SymbolTable(table);
-                        newTableElse.setName("else if Statement");
-                        let result = this.instructionsElse.interpret(tree, newTableElse);
-                    }
+            }
+            else {
+                if (this.instructionsElse instanceof If) {
+                    let newTableElse = new __1.SymbolTable(table);
+                    newTableElse.setName("else if Statement");
+                    let result = this.instructionsElse.interpret(tree, newTableElse);
+                    console.log(`ELSE IF ${result}`);
                 }
             }
         }
@@ -118,15 +114,13 @@ class If extends __1.Instruction {
         for (let i of this.instructions) {
             ast += i.ast(newFather);
         }
-        if (this.elseIf) {
-            ast += `node_If${this.nodeName}_2[label="Else"]\n`;
-            ast += `${newFather} -> node_If${this.nodeName}_2\n`;
-            if (this.instructionsElse) {
-                // for (let i of this.instructionsElse) {
-                //     ast += i.ast(`node_If${this.nodeName}_2`);
-                // }
-            }
-        }
+        ast += `node_If${this.nodeName}_2[label="Else"]\n`;
+        ast += `${newFather} -> node_If${this.nodeName}_2\n`;
+        // if (this.instructionsElse) {
+        // for (let i of this.instructionsElse) {
+        //     ast += i.ast(`node_If${this.nodeName}_2`);
+        // }
+        // }
         return ast;
     }
 }
