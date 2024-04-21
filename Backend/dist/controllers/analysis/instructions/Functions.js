@@ -15,11 +15,20 @@ class Functions extends __1.Instruction {
     }
     interpret(tree, table) {
         for (let i of this.instructions) {
+            console.log("FUNCTIONS: ", i);
+            if (i instanceof Return_1.default) {
+                console.log("FUNCTION - IF", i);
+                return i;
+            }
             let result = i.interpret(tree, table);
             if (result instanceof Errors_1.default)
                 return result;
-            if (result instanceof Return_1.default)
-                return result;
+            if (result instanceof Return_1.default) {
+                console.log("FUNCTION - RESULT - IF", result);
+                let resultCall = result.interpret(tree, table);
+                return resultCall;
+            }
+            ;
         }
     }
     ast(fatherNode) {
@@ -29,9 +38,9 @@ class Functions extends __1.Instruction {
         ast += `${fatherNode} -> node_${this.row}_${this.column}_1\n`;
         ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
         ast += `${fatherNode} -> node_${this.row}_${this.column}_2\n`;
-        for (let i of this.params) {
-            ast += i.ast(`node_${this.row}_${this.column}_2`);
-        }
+        // for(let i of this.params) {
+        //     ast += i.ast(`node_${this.row}_${this.column}_2`)
+        // }
         ast += `node_${this.row}_${this.column}_3[label="instructions"]\n`;
         ast += `${fatherNode} -> node_${this.row}_${this.column}_3\n`;
         for (let i of this.instructions) {

@@ -14,7 +14,6 @@ export default class DeclarationArr extends Instruction {
 
     interpret(tree: Tree, table: SymbolTable) {
 
-        console.log('DECLARATIONARR', this.value[0].length)
         // this.valueArr = this.value.map(
         //     (arr) => arr.map(
         //         (val) => {

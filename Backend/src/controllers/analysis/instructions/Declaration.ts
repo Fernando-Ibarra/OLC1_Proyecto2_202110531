@@ -1,6 +1,7 @@
 import { Instruction, Symbol, SymbolTable, Tree } from '../';
 import Error from '../exceptions/Errors';
 import TypeD, { typeData } from '../symbols/TypeD';
+import Call from './Call';
 
 export default class Declaration extends Instruction {
     private id: string[];
@@ -20,16 +21,21 @@ export default class Declaration extends Instruction {
         for (let i = 0; i < this.id.length; i++) {
             let id = this.id[i]
             if (this.value) {
+                console.log(`id: ${id} value: ${ this.value }` )
                 let NewValue = this.value.interpret(tree, table)
+                console.log(`id: ${id} newValue: ${ NewValue }` )
                 if (NewValue instanceof Error) return NewValue
                 
+                console.log(`id: ${id} valueCon1: ${ NewValue }` )
                 if (this.value.typeData.getTypeData() != this.typeData.getTypeData()) {
                     return new Error('Semantico', `No se puede asignar el tipo ${this.value.typeData.getTypeData()} a ${this.typeData.getTypeData()}`, this.row, this.column)
                 }
             
+                console.log(`id: ${id} valueCon2: ${ NewValue }` )
                 if (!table.setVariable(new Symbol(this.typeData, id, NewValue))) {
                     return new Error('Semantico', `La variable ${id} ya existe`, this.row, this.column)
                 }
+                console.log(`id: ${id} valueInter: ${ NewValue }` )
             } else {
                 if (!table.setVariable(new Symbol(this.typeData, id, this.defaultValues(this.typeData.getTypeData())))) {
                     return new Error('Semantico', `La variable ${id} ya existe`, this.row, this.column)

@@ -35,8 +35,7 @@ class controller {
         astDot += "node1 [label=\"INSTRUCTIONS\"];\n";
         astDot += "node0 -> node1;\n";
 
-        try {
-            const { code } = req.body;
+        const { code } = req.body;
             let parser = require('./analysis/analyzer');
             let ast = new Tree(parser.parse(code));
             let symbolTable = new SymbolTable();
@@ -47,7 +46,12 @@ class controller {
 
             for(let i of ast.getInstructions()){
 
-                if (i instanceof Method) {
+                if (i instanceof Method ) {
+                    i.id = i.id.toLocaleLowerCase();
+                    ast.addFunction(i);
+                }
+
+                if (i instanceof Functions ) {
                     i.id = i.id.toLocaleLowerCase();
                     ast.addFunction(i);
                 }
@@ -64,8 +68,8 @@ class controller {
                 }
 
                 console.log(i);
-                var astGraph = i.ast("node1");
-                astDot += astGraph;
+                // var astGraph = i.ast("node1");
+                // astDot += astGraph;
             }
 
             if (execute != null) {
@@ -88,10 +92,13 @@ class controller {
                 "codeOutput": ast.getConsole(),
                 "ast": astDot
             })
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({"Error": "Error inesperado"})
-        }
+
+        // try {
+            
+        // } catch (error) {
+        //     console.log(error);
+        //     res.status(500).json({"Error": "Error inesperado"})
+        // }
     }
 }
 

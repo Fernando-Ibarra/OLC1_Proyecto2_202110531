@@ -1,5 +1,7 @@
 import { Instruction, SymbolTable, Tree } from '../';
+import AccessVar from '../expressions/AccessVar';
 import TypeD, { typeData } from '../symbols/TypeD';
+import Call from './Call';
 
 export default class Return extends Instruction {
     private expression: Instruction | undefined;
@@ -11,8 +13,15 @@ export default class Return extends Instruction {
 
     interpret(tree: Tree, table: SymbolTable) {
         if (this.expression) {
+            console.log("RETURN - EXPRESSION", this.expression)
             let result = this.expression.interpret(tree, table);
             if (result instanceof Error) return result
+            if ( result instanceof Call ) {
+                let valueCall: Instruction | any = result.interpret(tree, table)
+                if (valueCall instanceof Error) return valueCall
+                return valueCall
+            }
+            console.log("RETURN - RESULT", result)
             return result;
         } else {
             return;

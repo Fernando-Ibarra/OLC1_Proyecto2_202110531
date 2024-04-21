@@ -30,11 +30,13 @@ const __1 = require("../");
 const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Declaration_1 = __importDefault(require("./Declaration"));
+const Functions_1 = __importDefault(require("./Functions"));
 const Method_1 = __importDefault(require("./Method"));
+const Return_1 = __importDefault(require("./Return"));
 class Call extends __1.Instruction {
     constructor(id, row, column, params) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
-        this.id = id[0];
+        this.id = id;
         this.params = params;
     }
     interpret(tree, table) {
@@ -68,6 +70,36 @@ class Call extends __1.Instruction {
             let result = seek.interpret(tree, newTable);
             if (result instanceof Errors_1.default)
                 return result;
+        }
+        if (seek instanceof Functions_1.default) {
+            let newTable = new __1.SymbolTable(tree.getGlobalTable());
+            newTable.setName("Llamada a Funcion " + this.id);
+            if (seek.params.length != this.params.length) {
+                return new Errors_1.default('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column);
+            }
+            for (let i = 0; i < seek.params.length; i++) {
+                let param = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id]);
+                let result = param.interpret(tree, newTable);
+                if (result instanceof Errors_1.default)
+                    return result;
+                let value = this.params[i].interpret(tree, table);
+                if (value instanceof Errors_1.default)
+                    return value;
+                let updateVar = newTable.getVariable(seek.params[i].id);
+                if (updateVar == null) {
+                    return new Errors_1.default('Semantico', `No existe la variable ${seek.params[i].id}`, this.row, this.column);
+                }
+                updateVar.setValue(value);
+                console.log(`VAR UPDATE ${updateVar.getId()} VALUE: `, updateVar.getValue());
+            }
+            let result = seek.interpret(tree, newTable);
+            this.typeData = seek.typeData;
+            if (result instanceof Return_1.default) {
+                return result;
+            }
+            if (result instanceof Errors_1.default)
+                return result;
+            return result;
         }
     }
     ast(fatherNode) {

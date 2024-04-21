@@ -54,15 +54,21 @@ class If extends __1.Instruction {
             for (let i of this.instructions) {
                 if (i instanceof Break_1.default)
                     return i;
-                if (i instanceof Continue_1.default)
+                if (i instanceof Return_1.default) {
+                    console.log("RETURN - IF", i);
                     return i;
-                if (i instanceof Return_1.default)
+                }
+                ;
+                if (i instanceof Continue_1.default)
                     return i;
                 let result = i.interpret(tree, newTable);
                 if (result instanceof Break_1.default)
                     return result;
-                if (result instanceof Return_1.default)
+                if (result instanceof Return_1.default) {
+                    console.log("RETURN - RESULT - IF", result);
                     return result;
+                }
+                ;
                 if (result instanceof Continue_1.default)
                     return result;
                 if (result instanceof Errors_1.default)

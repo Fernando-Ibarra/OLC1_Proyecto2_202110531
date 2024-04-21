@@ -4,14 +4,15 @@ import TypeD, { typeData } from '../symbols/TypeD';
 import Declaration from './Declaration';
 import Functions from './Functions';
 import Method from './Method';
+import Return from './Return';
 
 export default class Call extends Instruction {
     private id: string;
     private params: Instruction[];
 
-    constructor(id: string[], row: number, column: number, params: Instruction[]) {
+    constructor(id: string, row: number, column: number, params: Instruction[]) {
         super(new TypeD(typeData.VOID), row, column)
-        this.id = id[0]
+        this.id = id
         this.params = params
     }
 
@@ -21,7 +22,7 @@ export default class Call extends Instruction {
             return new Error('Semantico', `No existe la funcion`, this.row, this.column)
         }
 
-        if ( seek instanceof Method ) {
+        if ( seek instanceof Method) {
             let newTable = new SymbolTable(tree.getGlobalTable())
             newTable.setName("Llamada a método " + this.id)
 
@@ -51,6 +52,41 @@ export default class Call extends Instruction {
 
             let result: any = seek.interpret(tree, newTable)
             if (result instanceof Error) return result
+        }
+
+        if ( seek instanceof Functions ) {
+            let newTable = new SymbolTable(tree.getGlobalTable())
+            newTable.setName("Llamada a Funcion " + this.id)
+
+            if( seek.params.length != this.params.length ) {
+                return new Error('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column)
+            }
+
+            for(let i=0; i < seek.params.length; i++) {
+                let param = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id])
+                
+                let result = param.interpret(tree, newTable)
+                if (result instanceof Error) return result
+
+                let value = this.params[i].interpret(tree, table)
+                if (value instanceof Error) return value
+
+                let updateVar = newTable.getVariable(seek.params[i].id)
+                if (updateVar == null) {
+                    return new Error('Semantico', `No existe la variable ${seek.params[i].id}`, this.row, this.column)
+                }
+
+                updateVar.setValue(value)
+                console.log(`VAR UPDATE ${ updateVar.getId() } VALUE: `, updateVar.getValue())
+            }
+
+            let result: any = seek.interpret(tree, newTable)
+            this.typeData = seek.typeData
+            if ( result instanceof Return ) {
+                return result
+            }
+            if (result instanceof Error) return result
+            return result
         }
 
     }

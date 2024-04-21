@@ -22,9 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const __1 = require("../");
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
+const Call_1 = __importDefault(require("./Call"));
 class Return extends __1.Instruction {
     constructor(row, column, expression) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
@@ -32,9 +36,17 @@ class Return extends __1.Instruction {
     }
     interpret(tree, table) {
         if (this.expression) {
+            console.log("RETURN - EXPRESSION", this.expression);
             let result = this.expression.interpret(tree, table);
             if (result instanceof Error)
                 return result;
+            if (result instanceof Call_1.default) {
+                let valueCall = result.interpret(tree, table);
+                if (valueCall instanceof Error)
+                    return valueCall;
+                return valueCall;
+            }
+            console.log("RETURN - RESULT", result);
             return result;
         }
         else {

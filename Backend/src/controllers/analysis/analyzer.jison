@@ -187,6 +187,7 @@ INSTRUCTION: PRINT SEMICOLON                                 { $$ = $1; }
            | CONTINUE_S                                      { $$ = $1; }
            | RETURN_S                                        { $$ = $1; }
            | METHOD_S                                        { $$ = $1; }
+           | FUNCTION_S                                      { $$ = $1; }
            | EXECUTE_S SEMICOLON                             { $$ = $1; }
            | CALL_S SEMICOLON                                { $$ = $1; }
            | error INSTRUCTION         { errores.push(new Errores.default('Sintáctico', 'Error en la definición de instrucción', @1.first_line, @1.first_column));}
@@ -258,6 +259,10 @@ METHOD_S: VOID_TYPE IDS LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ =
         | VOID_TYPE IDS LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Method.default($2, $1, $6, @1.first_line, @1.first_column, []); }
 ;
 
+FUNCTION_S: TYPES IDS LPAREN PARAMS_S RPAREN LBRACE INSTRUCTIONS RBRACE { $$ = new Functions.default($2, $1, $7, @1.first_line, @1.first_column, $4); }
+          | TYPES IDS LPAREN RPAREN LBRACE INSTRUCTIONS RBRACE          { $$ = new Functions.default($2, $1, $6, @1.first_line, @1.first_column, []); }
+;
+
 PARAMS_S: PARAMS_S COMMA TYPES ID                        { $1.push({ typeDa: $3, id: $4 }); $$ = $1; }
         | TYPES ID                                       { $$ = [{ typeDa: $1, id: $2 }]; }
 ;
@@ -267,8 +272,8 @@ EXECUTE_S: EXECUTE IDS LPAREN PARAMS_CALL RPAREN            { $$ = new Execute.d
 ;
 
 
-CALL_S: IDS LPAREN PARAMS_CALL RPAREN                     { $$ = new Call.default($1, @1.first_line, @1.first_column, $3); }
-      | IDS LPAREN RPAREN                                 { $$ = new Call.default($1, @1.first_line, @1.first_column, []); }
+CALL_S: ID LPAREN PARAMS_CALL RPAREN                     { $$ = new Call.default($1, @1.first_line, @1.first_column, $3); }
+      | ID LPAREN RPAREN                                 { $$ = new Call.default($1, @1.first_line, @1.first_column, []); }
 ;
 
 
@@ -322,8 +327,9 @@ EXPRESSION: EXPRESSION PLUS EXPRESSION                      { $$ = new Aritmetic
           | TOUPPER LPAREN EXPRESSION RPAREN                { $$ = new ToUpper.default($3, @1.first_line, @1.first_column); }
           | ROUND LPAREN EXPRESSION RPAREN                  { $$ = new Round.default($3, @1.first_line, @1.first_column); }
           | STD COLON COLON TOSTRING LPAREN EXPRESSION RPAREN               { $$ = new ToString.default($6, @1.first_line, @1.first_column); }
-          | LISTF                                           { $$ = $1; }
+          | LISTF SEMICOLON                                { $$ = $1; }
           | LPAREN EXPRESSION RPAREN INTERROGATION EXPRESSION COLON EXPRESSION { $$ = new Ternary.default($2, $5, $7, @1.first_line, @1.first_column); }
+          | CALL_S                                          { $$ = $1; }
           // | LISTACCES                                      { $$ = $1; }
 ;
 

@@ -31,6 +31,7 @@ const Errors_1 = __importDefault(require("../exceptions/Errors"));
 const TypeD_1 = __importStar(require("../symbols/TypeD"));
 const Declaration_1 = __importDefault(require("./Declaration"));
 const Method_1 = __importDefault(require("./Method"));
+const Functions_1 = __importDefault(require("./Functions"));
 class Execute extends __1.Instruction {
     constructor(id, row, column, params) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
@@ -58,6 +59,22 @@ class Execute extends __1.Instruction {
             if (result instanceof Errors_1.default)
                 return result;
         }
+        if (seek instanceof Functions_1.default) {
+            let newTable = new __1.SymbolTable(tree.getGlobalTable());
+            newTable.setName("Execute");
+            if (seek.params.length != this.params.length) {
+                return new Errors_1.default('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column);
+            }
+            for (let i = 0; i < seek.params.length; i++) {
+                let paramDeclared = new Declaration_1.default(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i]);
+                let result = paramDeclared.interpret(tree, newTable);
+                if (result instanceof Errors_1.default)
+                    return result;
+            }
+            let result = seek.interpret(tree, newTable);
+            if (result instanceof Errors_1.default)
+                return result;
+        }
     }
     ast(fatherNode) {
         let newFather = `node_Execute${this.row}_${this.column}`;
@@ -66,8 +83,8 @@ class Execute extends __1.Instruction {
         ast += `node_Execute${this.row}_${this.column}_EX [label="Execute"]\n`;
         ast += `node_Execute${this.row}_${this.column}_ID[label="ID"]\n`;
         ast += `node_Execute${this.row}_${this.column}_LP[label="("]\n`;
-        ast += `node_Execute${this.row}_${this.column}_RP[label=")"]\n`;
         ast += `node_Execute${this.row}_${this.column}_PARM[label="PARAMS"]\n`;
+        ast += `node_Execute${this.row}_${this.column}_RP[label=")"]\n`;
         ast += `node_Execute${this.row}_${this.column}_SC[label=";"]\n`;
         ast += `${newFather} -> node_Execute${this.row}_${this.column}_EX\n`;
         ast += `${newFather} -> node_Execute${this.row}_${this.column}_ID\n`;

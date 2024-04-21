@@ -22,7 +22,25 @@ export default class Execute extends Instruction {
             return new Error('Semantico', `No existe la funcion`, this.row, this.column)
         }
 
-        if ( seek instanceof Method ) {
+        if ( seek instanceof Method) {
+            let newTable = new SymbolTable(tree.getGlobalTable())
+            newTable.setName("Execute")
+
+            if( seek.params.length != this.params.length ) {
+                return new Error('Semantico', `La cantidad de parametros no coincide con la funcion`, this.row, this.column)
+            }
+
+            for(let i=0; i < seek.params.length; i++) {
+                let paramDeclared = new Declaration(seek.params[i].typeDa, this.row, this.column, [seek.params[i].id], this.params[i])
+                let result = paramDeclared.interpret(tree, newTable)
+                if (result instanceof Error) return result
+            }
+
+            let result: any = seek.interpret(tree, newTable)
+            if (result instanceof Error) return result
+        }
+
+        if ( seek instanceof Functions ) {
             let newTable = new SymbolTable(tree.getGlobalTable())
             newTable.setName("Execute")
 

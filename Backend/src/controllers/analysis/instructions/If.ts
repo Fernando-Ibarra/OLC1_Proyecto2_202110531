@@ -34,11 +34,17 @@ export default class If extends Instruction {
             newTable.setName("If Statement");
             for (let i of this.instructions) {
                 if (i instanceof Break) return i;
+                if (i instanceof Return) {
+                    console.log("RETURN - IF", i)
+                    return i
+                };
                 if (i instanceof Continue) return i;
-                if (i instanceof Return) return i;
                 let result = i.interpret(tree, newTable);
                 if (result instanceof Break) return result;
-                if (result instanceof Return) return result;
+                if (result instanceof Return) {
+                    console.log("RETURN - RESULT - IF", result)
+                    return result
+                };
                 if (result instanceof Continue) return result;
                 if (result instanceof Error) return result;
 

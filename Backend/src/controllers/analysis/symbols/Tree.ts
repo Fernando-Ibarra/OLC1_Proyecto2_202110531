@@ -2,6 +2,7 @@ import { SymbolTable } from './';
 import { Instruction } from '../';
 import Error from '../exceptions/Errors';
 import Method from '../instructions/Method';
+import Functions from '../instructions/Functions';
 
 export class Tree {
     private instructions: Array<Instruction>;
@@ -73,6 +74,12 @@ export class Tree {
     public getFunction(id: string) {
         for(let i of this.getFunctions()) {
             if (i instanceof Method ) {
+                if ( i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
+                    return i;
+                }
+                
+            }
+            if ( i instanceof Functions ) {
                 if ( i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
                     return i;
                 }

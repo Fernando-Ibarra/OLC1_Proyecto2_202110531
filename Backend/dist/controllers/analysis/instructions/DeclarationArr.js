@@ -9,7 +9,6 @@ class DeclarationArr extends __1.Instruction {
         this.value = value;
     }
     interpret(tree, table) {
-        console.log('DECLARATIONARR', this.value[0].length);
         // this.valueArr = this.value.map(
         //     (arr) => arr.map(
         //         (val) => {
