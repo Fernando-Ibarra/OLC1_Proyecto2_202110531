@@ -33,6 +33,7 @@ class Return extends __1.Instruction {
     constructor(row, column, expression) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.expression = expression;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         if (this.expression) {
@@ -52,12 +53,14 @@ class Return extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let ast = `node_Return${this.row}_${this.column}[label="Return"]\n`;
+        let newFather = `node_Return${this.nodeName}`;
+        let ast = `${newFather}[label="RETURN INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_Return${this.nodeName}_SC [label=";"]\n`;
         if (this.expression) {
-            ast += `node_Return${this.row}_${this.column} -> node_Expression${this.expression.row}_${this.expression.column}\n`;
-            ast += this.expression.ast(`Return${this.row}_${this.column}`);
+            ast += this.expression.ast(newFather);
         }
-        ast += `${fatherNode} -> node_Return${this.row}_${this.column}\n`;
+        ast += `${fatherNode} -> node_Return${this.nodeName}_SC\n`;
         return ast;
     }
 }

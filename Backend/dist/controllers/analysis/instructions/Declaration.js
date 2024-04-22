@@ -16,6 +16,7 @@ class Declaration extends __1.Instruction {
             this.id = id;
             this.value = value;
         }
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         for (let i = 0; i < this.id.length; i++) {
@@ -56,27 +57,49 @@ class Declaration extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let newFather = `node_Declaration${this.row}_${this.column}`;
-        let ast = `${newFather}[label="DECLARATION"]\n`;
+        let newFather = `node_Declaration${this.nodeName}`;
+        let ast = `${newFather}[label="DECLARATION INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_Declaration${this.row}_${this.column}_ID [label="ID"]\n`;
-        ast += `node_Declaration${this.row}_${this.column}_TYPE [label="TYPE"]\n`;
-        ast += `node_Declaration${this.row}_${this.column}_VALUE [label="VALUE"]\n`;
-        ast += `node_Declaration${this.row}_${this.column}_SC [label=";"]\n`;
-        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_ID\n`;
-        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_TYPE\n`;
-        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_VALUE\n`;
-        ast += `${newFather} -> node_Declaration${this.row}_${this.column}_SC\n`;
+        ast += `node_Declaration${this.nodeName}_TYPE [label="TYPE"]\n`;
+        ast += `node_Declaration${this.nodeName}_ID [label="ID"]\n`;
+        ast += `node_Declaration${this.nodeName}_EQ [label="="]\n`;
+        ast += `node_Declaration${this.nodeName}_VALUE [label="VALUE"]\n`;
+        ast += `node_Declaration${this.nodeName}_SC [label=";"]\n`;
+        ast += `${newFather} -> node_Declaration${this.nodeName}_TYPE\n`;
+        ast += `${newFather} -> node_Declaration${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_Declaration${this.nodeName}_EQ\n`;
+        ast += `${newFather} -> node_Declaration${this.nodeName}_VALUE\n`;
+        ast += `${newFather} -> node_Declaration${this.nodeName}_SC\n`;
         for (let i of this.id) {
-            ast += `node_Declaration${this.row}_${this.column}_ID${i} [label="${i}"]\n`;
-            ast += `node_Declaration${this.row}_${this.column}_ID -> node_Declaration${this.row}_${this.column}_ID${i}\n`;
+            ast += `node_Declaration${this.nodeName}_ID${i} [label="${i}"]\n`;
+            ast += `node_Declaration${this.nodeName}_ID -> node_Declaration${this.nodeName}_ID${i}\n`;
         }
-        ast += `node_Declaration${this.row}_${this.column}_TYPE${this.typeData.getTypeData()} [label="${this.typeData.getTypeData()}"]\n`;
-        ast += `node_Declaration${this.row}_${this.column}_TYPE -> node_Declaration${this.row}_${this.column}_TYPE${this.typeData.getTypeData()}\n`;
+        ast += `node_Declaration${this.nodeName}_TYPE${this.typeData.getTypeData()} [label="${this.getTypeString(this.typeData.getTypeData())}"]\n`;
+        ast += `node_Declaration${this.nodeName}_TYPE -> node_Declaration${this.nodeName}_TYPE${this.typeData.getTypeData()}\n`;
         if (this.value) {
-            ast += this.value.ast(`node_Declaration${this.row}_${this.column}_VALUE`);
+            ast += this.value.ast(`node_Declaration${this.nodeName}_VALUE`);
         }
         return ast;
+    }
+    getTypeString(tpd) {
+        if (tpd == TypeD_1.typeData.BOOL) {
+            return "bool";
+        }
+        else if (tpd == TypeD_1.typeData.CHAR) {
+            return "char";
+        }
+        else if (tpd == TypeD_1.typeData.FLOAT) {
+            return "double";
+        }
+        else if (tpd == TypeD_1.typeData.STRING) {
+            return "std::string";
+        }
+        else if (tpd == TypeD_1.typeData.INT) {
+            return "int";
+        }
+        else {
+            return "void";
+        }
     }
 }
 exports.default = Declaration;

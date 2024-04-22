@@ -9,7 +9,7 @@ export default class Casts extends Instruction {
     constructor(newType: TypeD, expression: Instruction, row: number, column: number) {
         super(newType, row, column)
         this.expression = expression
-        this.nodeName = `Casts${row}_${column}`
+        this.nodeName = `${row}_${column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -78,14 +78,41 @@ export default class Casts extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_Casts${ this.nodeName }[label="Casts"]\n`
-        ast +=  `node_Casts(${ this.nodeName } [label="("]\n`
-        ast += this.expression.ast(`node_Casts${ this.nodeName }`)
-        ast += `node_Casts)${ this.nodeName } [label=")"]\n`
-        ast += `node_Casts${ this.nodeName } -> node_Casts(${ this.nodeName } \n`
-        ast += `node_Casts${ this.nodeName } -> node_Casts)${ this.nodeName } \n`
-        ast += `${ fatherNode }  -> node_Casts${ this.nodeName } \n`
+        let newFather = `node_Casts${this.nodeName}`
+        let ast = `${newFather}[label="CASTS INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`
+
+        ast += `node_Casts${this.nodeName}_LP[label="("]\n`;
+        ast += `node_Casts${this.nodeName}_TYPE [label="TYPE"]\n`;
+        ast += `node_Casts${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_Casts${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+
+        ast += `${newFather} -> node_Casts${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Casts${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_Casts${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Casts${this.nodeName}_EXPRESION\n`;
+
+        ast += this.expression.ast(`node_Casts${this.nodeName}_EXPRESION`)
+
+        ast += `node_Casts${this.nodeName}_TYPE_NAME [label="${this.getTypeString(this.typeData.getTypeData())}"]\n`;
+        ast += `node_Casts${this.nodeName}_TYPE -> node_Casts${this.nodeName}_TYPE_NAME\n`;
         return ast
+    }
+
+    getTypeString(tpd: typeData): string {
+        if (tpd == typeData.BOOL) {
+            return "bool";
+        } else if (tpd == typeData.CHAR) {
+            return "char";
+        } else if (tpd == typeData.FLOAT) {
+            return "double"
+        } else if (tpd == typeData.STRING) {
+            return "std::string";
+        } else  if (tpd == typeData.INT) {
+            return "int"
+        } else {
+            return "void";
+        }
     }
 
 }

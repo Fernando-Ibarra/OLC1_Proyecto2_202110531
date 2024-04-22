@@ -13,7 +13,7 @@ export default class Case extends Instruction {
         super(new TypeD(typeData.VOID), row, column);
         this.expression = expression;
         this.instructions = instructions;
-        this.nodeName = `Case${row}_${column}`;
+        this.nodeName = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -32,13 +32,23 @@ export default class Case extends Instruction {
 
     ast(fatherNode: string): string {
         let newFather = `node_Case${this.nodeName}`;
-        let ast = `${newFather}[label="Case"]\n`;
+        let ast = `${newFather}[label="CASE INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_Case${this.nodeName}_1[label="Expression"]\n`;
-        ast += `${newFather} -> node_Case${this.nodeName}_1\n`;
-        ast += this.expression.ast(`node_Case${this.nodeName}_1`);
+
+        ast += `node_Case${this.nodeName}_CS [label="case"]\n`;
+        ast += `node_Case${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_Case${this.nodeName}_SC[label=":"]\n`;
+        ast += `node_Case${this.nodeName}_INSTRUCTIONS [label="INSTRUCTIONS"]\n`;
+
+        ast += `${newFather} -> node_Case${this.nodeName}_CS\n`;
+        ast += `${newFather} -> node_Case${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_Case${this.nodeName}_SC\n`;
+
+        ast += this.expression.ast(`node_Case${this.nodeName}_EXPRESION`)
+        ast += `${newFather} -> node_Case${this.nodeName}_INSTRUCTIONS\n`;
+        
         for (let i of this.instructions) {
-            ast += i.ast(newFather);
+            ast += i.ast(`node_Case${this.nodeName}_INSTRUCTIONS`);
         }
         return ast;
     }

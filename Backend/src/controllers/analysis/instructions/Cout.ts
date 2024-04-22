@@ -11,7 +11,7 @@ export default class Cout extends Instruction{
         super(new TypeD(typeData.VOID), line, column)
         this.expression = exp
         this.endl = endl;
-        this.nameNode = `Cout${ line }_${ column }` 
+        this.nameNode = `${ line }_${ column }` 
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -25,14 +25,26 @@ export default class Cout extends Instruction{
        }
     }
 
-    ast(father: string) {
-        let ast = `node_Cout${ this.nameNode }[label="cout"]\n`
-        ast += `node_CoutLP${ this.nameNode } [label="("]\n` 
-        ast += this.expression.ast(`node_Cout${ this.nameNode }`)
-        ast += `node_CoutRP${ this.nameNode } [label=")"]\n` 
-        ast += `node_Cout${ this.nameNode } -> node_CoutLP${ this.nameNode }\n`
-        ast += `node_Cout${ this.nameNode } -> node_CoutRP${ this.nameNode } \n`
-        ast += `${ father } -> node_Cout${ this.nameNode } \n`
+    ast(fatherNode: string) {
+        let newFather = `node_Cout${ this.nameNode }`;
+        let ast = `${ newFather }[label="COUT INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`;
+
+
+        ast += `node_Cout${this.nameNode}_COUT [label="COUT"]\n`;
+        ast += `node_Cout${this.nameNode}_LP[label="("]\n`;
+        ast += `node_Cout${this.nameNode}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_Cout${this.nameNode}_RP[label=")"]\n`;
+        ast += `node_Cout${this.nameNode}_SC [label=";"]\n`;
+
+        ast += `${newFather} -> node_Cout${this.nameNode}_COUT\n`;
+        ast += `${newFather} -> node_Cout${this.nameNode}_LP\n`;
+        ast += `${newFather} -> node_Cout${this.nameNode}_EXPRESION\n`;
+        ast += `${newFather} -> node_Cout${this.nameNode}_RP\n`;
+        ast += `${newFather} -> node_Cout${this.nameNode}_SC\n`;
+
+
+        ast += this.expression.ast(`node_Cout${this.nameNode}_EXPRESION`)
         return ast
     }
 }

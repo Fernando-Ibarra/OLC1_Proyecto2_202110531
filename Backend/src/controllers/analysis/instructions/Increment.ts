@@ -9,7 +9,7 @@ export default class Increment extends Instruction {
     constructor(id: string, line: number, column: number) {
         super(new TypeD(typeData.VOID), line, column)
         this.id = id[0]
-        this.nodeName = `Increment${this.row}_${this.column}`
+        this.nodeName = `${this.row}_${this.column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -23,8 +23,20 @@ export default class Increment extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_${this.nodeName}[label="Increment"]\n`
-        ast += `${fatherNode} -> node_${this.nodeName}\n`
+        let newFather = `node_INCREMENT${ this.nodeName }`
+        let ast = `${newFather}[label="INCREMENT INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`
+
+        ast += `node_INCREMENT${this.nodeName}_ID [label="${this.id}"]\n`
+        ast += `node_INCREMENT${this.nodeName}_PLUS1 [label="+"]\n`
+        ast += `node_INCREMENT${this.nodeName}_PLUS2 [label="+"]\n`
+        ast += `node_INCREMENT${this.nodeName}_SC [label=";"]\n`
+
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_ID\n`
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_PLUS1\n`
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_PLUS2\n`
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_SC\n`
+        
         return ast
     }
 

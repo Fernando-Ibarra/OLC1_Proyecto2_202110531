@@ -10,7 +10,7 @@ class Decrement extends __1.Instruction {
     constructor(id, line, column) {
         super(new TypeD_1.default(__1.typeData.VOID), line, column);
         this.id = id[0];
-        this.nodeName = 'Decrement';
+        this.nodeName = `${this.row}_${this.column}`;
     }
     interpret(tree, table) {
         let value = table.getVariable(this.id.toLocaleLowerCase());
@@ -23,8 +23,17 @@ class Decrement extends __1.Instruction {
         value.setValue(parseInt(value.getValue()) - 1);
     }
     ast(fatherNode) {
-        let ast = `node_${this.nodeName}${this.row}_${this.column}[label="Decrement"]\n`;
-        ast += `${fatherNode} -> node_${this.nodeName}${this.row}_${this.column}\n`;
+        let newFather = `node_DECREMENT${this.nodeName}`;
+        let ast = `${newFather}[label="DECREMENT INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_DECREMENT${this.nodeName}_ID [label="${this.id}"]\n`;
+        ast += `node_DECREMENT${this.nodeName}_MINUS1 [label="-"]\n`;
+        ast += `node_DECREMENT${this.nodeName}_MINUS2 [label="-"]\n`;
+        ast += `node_DECREMENT${this.nodeName}_SC [label=";"]\n`;
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_MINUS1\n`;
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_MINUS2\n`;
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_SC\n`;
         return ast;
     }
 }

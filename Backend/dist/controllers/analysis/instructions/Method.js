@@ -12,6 +12,7 @@ class Method extends __1.Instruction {
         this.id = id[0];
         this.params = params;
         this.instructions = instructions;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         for (let i of this.instructions) {
@@ -22,20 +23,30 @@ class Method extends __1.Instruction {
                 break;
         }
     }
-    ast(father) {
-        let ast = `node_${this.row}_${this.column}[label="Method"]\n`;
-        ast += `${father} -> node_${this.row}_${this.column}\n`;
-        ast += `node_${this.row}_${this.column}_1[label="id: ${this.id}"]\n`;
-        ast += `${father} -> node_${this.row}_${this.column}_1\n`;
-        ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
-        ast += `${father} -> node_${this.row}_${this.column}_2\n`;
-        for (let i of this.params) {
-            // ast += i.ast(`node_${this.row}_${this.column}_2`)
-        }
-        ast += `node_${this.row}_${this.column}_3[label="instructions"]\n`;
-        ast += `${father} -> node_${this.row}_${this.column}_3\n`;
+    ast(fatherNode) {
+        let newFather = `node_Method${this.nodeName}`;
+        let ast = `${newFather}[label="METHOD INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_Method${this.nodeName}_MT [label="VOID"]\n`;
+        ast += `node_Method${this.nodeName}_ID[label="ID"]\n`;
+        ast += `node_Method${this.nodeName}_LP[label="("]\n`;
+        ast += `node_Method${this.nodeName}_PARM[label="PARAMS"]\n`;
+        ast += `node_Method${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_Method${this.nodeName}_LB[label="{"]\n`;
+        ast += `node_Method${this.nodeName}_INSTRUCTIONS [label="INSTRUCTIONS"]\n`;
+        ast += `node_Method${this.nodeName}_RB[label="}"]\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_MT\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_PARM\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_LB\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_INSTRUCTIONS\n`;
+        ast += `${newFather} -> node_Method${this.nodeName}_RB\n`;
+        ast += `node_Method${this.nodeName}_ID_NAME [label="${this.id}"]\n`;
+        ast += `node_Method${this.nodeName}_ID -> node_Method${this.nodeName}_ID_NAME\n`;
         for (let i of this.instructions) {
-            ast += i.ast(`node_${this.row}_${this.column}_3`);
+            ast += i.ast(`node_Method${this.nodeName}_INSTRUCTIONS`);
         }
         return ast;
     }

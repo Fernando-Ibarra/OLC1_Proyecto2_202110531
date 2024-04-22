@@ -9,14 +9,14 @@ export default class If extends Instruction {
     private condition: Instruction;
     private instructions: Instruction[];
     private instructionsElse: Instruction[] | Instruction | undefined;
-    private nodeName: string;
+    private nameNode: string;
 
     constructor(condition: Instruction, instructions: Instruction[], row: number, column: number, instructionsElse?: Instruction[] ) {
         super(new TypeD(typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
         this.instructionsElse = instructionsElse;
-        this.nodeName = `If${row}_${column}`;
+        this.nameNode = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -64,29 +64,64 @@ export default class If extends Instruction {
                     let newTableElse = new SymbolTable(table);
                     newTableElse.setName("else if Statement");
                     let result = this.instructionsElse.interpret(tree, newTableElse);
-                    console.log(`ELSE IF ${result}`);
                 }
             }
         }
     }
 
     ast(fatherNode: string): string {
-        let newFather = `node_If${this.nodeName}`;
-        let ast = `${newFather}[label="If"]\n`;
+        // HEAD
+        let newFather = `node_If${ this.nameNode }`;
+        let ast = `${ newFather }[label="IF INSTRUCTION"]\n`
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_If${this.nodeName}_1[label="Condition"]\n`;
-        ast += `${newFather} -> node_If${this.nodeName}_1\n`;
-        ast += this.condition.ast(`node_If${this.nodeName}_1`);
+
+        // IF - CONDITION
+        ast += `node_If${this.nameNode}_IF [label="if"]\n`;
+        ast += `node_If${this.nameNode}_LP[label="("]\n`;
+        ast += `node_If${this.nameNode}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_If${this.nameNode}_RP[label=")"]\n`;
+        ast += `node_If${this.nameNode}_LB[label="{"]\n`;
+        ast += `node_If${this.nameNode}_INSTRUCTIONS_IF [label="INSTRUCTIONS"]\n`;
+        ast += `node_If${this.nameNode}_RB[label="}"]\n`;
+        
+
+        ast += `${newFather} -> node_If${this.nameNode}_IF\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_LP\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_EXPRESION\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_RP\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_LB\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_INSTRUCTIONS_IF\n`;
+        ast += `${newFather} -> node_If${this.nameNode}_RB\n`;
+
+        ast += this.condition.ast(`node_If${this.nameNode}_EXPRESION`)
         for (let i of this.instructions) {
-            ast += i.ast(newFather);
+            ast += i.ast(`node_If${this.nameNode}_INSTRUCTIONS_IF`);
         }
-        ast += `node_If${this.nodeName}_2[label="Else"]\n`;
-        ast += `${newFather} -> node_If${this.nodeName}_2\n`;
-        // if (this.instructionsElse) {
-            // for (let i of this.instructionsElse) {
-            //     ast += i.ast(`node_If${this.nodeName}_2`);
-            // }
-        // }
+        
+        // ELSE IF && ELSE
+        if (this.instructionsElse) {
+            ast += `node_If${this.nameNode}_ELSE [label="ELSE"]\n`;
+            if ( !Array.isArray(this.instructionsElse) ) {
+                // ELSE IF
+                ast += `${newFather} -> node_If${this.nameNode}_ELSE\n`;
+                ast += this.instructionsElse.ast(newFather);
+            } else {
+                // ELSE
+                ast += `${newFather} -> node_If${this.nameNode}_ELSE\n`;
+                ast += `node_If${this.nameNode}_LB_ELSE [label="{"]\n`;
+                ast += `node_If${this.nameNode}_INSTRUCTIONS_ELSE [label="INSTRUCTIONS"]\n`;
+                ast += `node_If${this.nameNode}_RB_ELSE [label="}"]\n`;
+
+                ast += `${newFather} -> node_If${this.nameNode}_LB_ELSE\n`;
+                ast += `${newFather} -> node_If${this.nameNode}_INSTRUCTIONS_ELSE\n`;
+                ast += `${newFather} -> node_If${this.nameNode}_RB_ELSE\n`;
+
+                for (let i of this.instructionsElse) {
+                    ast += i.ast(`node_If${this.nameNode}_INSTRUCTIONS_ELSE`);
+                }
+            }
+        }
+
         return ast;
     }
 }

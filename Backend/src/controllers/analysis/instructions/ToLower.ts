@@ -27,10 +27,25 @@ export default class ToLower extends Instruction{
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_${this.nodeName}[label="ToLower"]\n`
-        ast += `${fatherNode} -> node_${this.nodeName}\n`
+        let newFather = `node_Lower${this.nodeName}`
+        let ast = `${newFather}[label="TOLOWER INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`;
 
-        ast += this.expression.ast(`node_${this.nodeName}`)
+        // BODY
+        ast += `node_Lower${this.nodeName}_RD [label="tolower"]\n`;
+        ast += `node_Lower${this.nodeName}_LP [label="("]\n`;
+        ast += `node_Lower${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_Lower${this.nodeName}_RP [label=")"]\n`;
+        ast += `node_Lower${this.nodeName}_SC [label=";"]\n`;
+
+        ast += `${newFather} -> node_Lower${this.nodeName}_RD\n`;
+        ast += `${newFather} -> node_Lower${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Lower${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_Lower${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Lower${this.nodeName}_SC\n`;
+
+        // EXPRESSION
+        ast += this.expression.ast(`node_Lower${this.nodeName}_EXPRESION`)
 
         return ast
     }

@@ -4,10 +4,12 @@ import TypeD, { typeData } from '../symbols/TypeD';
 
 export default class Default extends Instruction {
     private instructions: Instruction[];
+    private nodeName: string;
 
     constructor(instructions: Instruction[], row: number, column: number) {
         super(new TypeD(typeData.VOID), row, column);
         this.instructions = instructions;
+        this.nodeName = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -21,10 +23,20 @@ export default class Default extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_Default${ this.row }_${ this.column }[label="Default"]\n`
-        ast += `${ fatherNode } -> node_Default${ this.row }_${ this.column }\n`
+        let newFather = `node_Default${this.nodeName}`;
+        let ast = `${newFather}[label="DEFAULT INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+
+        ast += `node_Default${this.nodeName}_DF [label="default"]\n`;
+        ast += `node_Default${this.nodeName}_SC[label=":"]\n`;
+        ast += `node_Default${this.nodeName}_INSTRUCTIONS [label="INSTRUCTIONS"]\n`;
+
+        ast += `${newFather} -> node_Default${this.nodeName}_DF\n`;
+        ast += `${newFather} -> node_Default${this.nodeName}_SC\n`;
+        ast += `${newFather} -> node_Default${this.nodeName}_INSTRUCTIONS\n`;
+
         for (let i of this.instructions) {
-            ast += i.ast(`node_Defaul${ this.row }_${ this.column }`)
+            ast += i.ast(`node_Default${this.nodeName}_INSTRUCTIONS`);
         }
         return ast;
     }

@@ -8,7 +8,7 @@ export default class Nativo extends Instruction {
     constructor( type: TypeD, value: any, line: number, column: number){
         super(type, line, column);
         this.value = value;
-        this.nameNode = `Nativo${line}_${column}`;
+        this.nameNode = `${line}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -23,8 +23,8 @@ export default class Nativo extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = `node${this.nameNode}[label="${this.value}"]\n`
-        ast +=  `${fatherNode} -> node${this.nameNode}\n`
+        let ast = `Nativo${this.nameNode}[label="${this.value}"]\n`
+        ast +=  `${fatherNode} -> Nativo${this.nameNode}\n`
         return ast
     }
     

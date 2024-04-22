@@ -10,7 +10,7 @@ export default class Round extends Instruction{
     constructor(exp: Instruction, line: number, column: number){
         super(new TypeD(typeData.STRING), line, column)
         this.expression = exp
-        this.nodeName = `Round${line}_${column}`
+        this.nodeName = `${line}_${column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -28,10 +28,27 @@ export default class Round extends Instruction{
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_${this.nodeName}[label="Round"]\n`
-        ast += `${fatherNode} -> node_${this.nodeName}\n`
+        // HEAD
+        let newFather = `node_Round${this.nodeName}`
+        let ast = `${newFather}[label="ROUND INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`;
 
-        ast += this.expression.ast(`node_${this.nodeName}`)
+        // BODY
+        ast += `node_Round${this.nodeName}_RD [label="round"]\n`;
+        ast += `node_Round${this.nodeName}_LP [label="("]\n`;
+        ast += `node_Round${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_Round${this.nodeName}_RP [label=")"]\n`;
+        ast += `node_Round${this.nodeName}_SC [label=";"]\n`;
+
+        ast += `${newFather} -> node_Round${this.nodeName}_RD\n`;
+        ast += `${newFather} -> node_Round${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Round${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_Round${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Round${this.nodeName}_SC\n`;
+
+        // EXPRESSION
+        ast += this.expression.ast(`node_Round${this.nodeName}_EXPRESION`)
+
         return ast
     }
 }

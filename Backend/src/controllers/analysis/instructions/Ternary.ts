@@ -13,7 +13,7 @@ export default class Ternary extends Instruction {
         this.condition = condition;
         this.conditionTrue = conditionTrue;
         this.conditionFalse = conditionFalse;
-        this.nodeName = `Ternary${row}_${column}`;
+        this.nodeName = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -38,6 +38,32 @@ export default class Ternary extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        return "";
+        let newFather = `node_Ternary${this.nodeName}`;
+        let ast = `${newFather}[label="TERNARY INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+
+        ast += `node_Ternary${this.nodeName}_LP[label="("]\n`;
+        ast += `node_Ternary${this.nodeName}_CONDITION [label="CONDITION"]\n`;
+        ast += `node_Ternary${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_Ternary${this.nodeName}_IN[label="?"]\n`;
+        ast += `node_Ternary${this.nodeName}_EXPRESION1 [label="EXPRESION"]\n`;
+        ast += `node_Ternary${this.nodeName}_CL [label=":"]\n`;
+        ast += `node_Ternary${this.nodeName}_EXPRESION2 [label="EXPRESION"]\n`;
+        ast += `node_Ternary${this.nodeName}_SC [label=";"]\n`;
+
+        ast += `${newFather} -> node_Ternary${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_CONDITION\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_IN\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_EXPRESION1\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_CL\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_EXPRESION2\n`;
+        ast += `${newFather} -> node_Ternary${this.nodeName}_SC\n`;
+        
+        ast += this.condition.ast(`node_Ternary${this.nodeName}_CONDITION`);
+        ast += this.conditionTrue.ast(`node_Ternary${this.nodeName}_EXPRESION1`);
+        ast += this.conditionFalse.ast(`node_Ternary${this.nodeName}_EXPRESION2`);
+
+        return ast;
     }
 }

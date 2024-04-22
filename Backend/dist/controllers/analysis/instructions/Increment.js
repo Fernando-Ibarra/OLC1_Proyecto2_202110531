@@ -10,7 +10,7 @@ class Increment extends __1.Instruction {
     constructor(id, line, column) {
         super(new TypeD_1.default(__1.typeData.VOID), line, column);
         this.id = id[0];
-        this.nodeName = `Increment${this.row}_${this.column}`;
+        this.nodeName = `${this.row}_${this.column}`;
     }
     interpret(tree, table) {
         let value = table.getVariable(this.id.toLocaleLowerCase());
@@ -23,8 +23,17 @@ class Increment extends __1.Instruction {
         value.setValue(parseInt(value.getValue()) + 1);
     }
     ast(fatherNode) {
-        let ast = `node_${this.nodeName}[label="Increment"]\n`;
-        ast += `${fatherNode} -> node_${this.nodeName}\n`;
+        let newFather = `node_INCREMENT${this.nodeName}`;
+        let ast = `${newFather}[label="INCREMENT INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_INCREMENT${this.nodeName}_ID [label="${this.id}"]\n`;
+        ast += `node_INCREMENT${this.nodeName}_PLUS1 [label="+"]\n`;
+        ast += `node_INCREMENT${this.nodeName}_PLUS2 [label="+"]\n`;
+        ast += `node_INCREMENT${this.nodeName}_SC [label=";"]\n`;
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_PLUS1\n`;
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_PLUS2\n`;
+        ast += `${newFather} -> node_INCREMENT${this.nodeName}_SC\n`;
         return ast;
     }
 }

@@ -19,7 +19,7 @@ export default class Aritmeticas extends Instruction {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
         }
-        this.nameNode = `Aritmeticas${row}_${column}`;
+        this.nameNode = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -612,23 +612,48 @@ export default class Aritmeticas extends Instruction {
 
 
     ast(fatherNode: string): string {
-        let ast = '';
+        // HEAD
+        let newFather = `node_Arit${this.nameNode}`;
+        let ast = `${newFather}[label="ARITHMETIC INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
         
-        if (!this.uniqueOperand) {
-            ast += `node_Rela${this.nameNode} [label="${this.operator}"]\n`
-            ast += `nodeuniOp${this.nameNode} [label="${this.uniqueOperand}"]\n`
+        if (this.uniqueOperand != null) {
+            ast += `node_Arit_Sig${this.nameNode} [label="${this.getArithmetic(this.operator)}"]\n`
+            ast += `nodeuniOp_Ari${this.nameNode} [label="${this.uniqueOperand}"]\n`
 
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`
-            ast += `${fatherNode} -> nodeuniOp${this.nameNode}\n`
+            ast += `${newFather} -> node_Arit_Sig${this.nameNode}\n`
+            ast += `${newFather} -> nodeuniOp_Ari${this.nameNode}\n`
         } else {
-            ast += `nodeLeft${this.nameNode} [label="${this.leftOperand}"]\n`
-            ast += `node_Rela${this.nameNode} [label="${this.operator}"]\n`
-            ast += `nodeRight${this.nameNode} [label="${this.rightOperand}"]\n`
-            ast += `${fatherNode} -> nodeLeft${this.nameNode}\n`
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`
-            ast += `${fatherNode} -> nodeRight${this.nameNode}\n`
+            ast += `nodeLeft_Arit${this.nameNode} [label="valor1"]\n`
+            ast += `node_Arit_Sig${this.nameNode} [label="${this.getArithmetic(this.operator)}"]\n`
+            ast += `nodeRight_Arit${this.nameNode} [label="valor2"]\n`
+            ast += `${newFather} -> nodeLeft_Arit${this.nameNode}\n`
+            ast += `${newFather} -> node_Arit_Sig${this.nameNode}\n`
+            ast += `${newFather} -> nodeRight_Arit${this.nameNode}\n`
+            ast += this.leftOperand?.ast(`nodeLeft_Arit${this.nameNode}`);
+            ast += this.rightOperand?.ast(`nodeRight_Arit${this.nameNode}`);
+
         }
         return ast
+    }
+
+    getArithmetic(arithmetic: ArithmeticOption) {
+        switch (arithmetic) {
+            case ArithmeticOption.PLUS:
+                return '+';
+            case ArithmeticOption.MINUS:
+                return '-';
+            case ArithmeticOption.TIMES:
+                return '*';
+            case ArithmeticOption.DIV:
+                return '/';
+            case ArithmeticOption.MOD:
+                return '%';
+            case ArithmeticOption.POWER:
+                return '^';
+            case ArithmeticOption.NEGATIVE:
+                return '-';
+        }
     }
 }
 

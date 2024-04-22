@@ -122,7 +122,7 @@ switch( edad ) {
 
 
 cout << "-----------------FOR--------------------" << endl;
-for(int i = 0; i<3; i++){
+for(int i = 0; i<5; i++){
     if ( i == 2) {
         continue;
     }

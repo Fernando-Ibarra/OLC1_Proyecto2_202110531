@@ -37,7 +37,7 @@ class DoWhile extends __1.Instruction {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.condition = condition;
         this.instructions = instructions;
-        this.nodeName = `DoWhile${row}_${column}`;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         do {
@@ -65,13 +65,27 @@ class DoWhile extends __1.Instruction {
     }
     ast(fatherNode) {
         let newFather = `node_DoWhile${this.nodeName}`;
-        let ast = `${newFather}[label="Do While"]\n`;
+        let ast = `${newFather}[label="DO WHILE INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_DoWhile${this.nodeName}_1[label="Condition"]\n`;
-        ast += `${newFather} -> node_DoWhile${this.nodeName}_1\n`;
-        ast += this.condition.ast(`node_DoWhile${this.nodeName}_1`);
+        ast += `node_DoWhile${this.nodeName}_DO [label="do"]\n`;
+        ast += `node_DoWhile${this.nodeName}_LB[label="{"]\n`;
+        ast += `node_DoWhile${this.nodeName}_INSTRUCTIONS_DW [label="INSTRUCTIONS"]\n`;
+        ast += `node_DoWhile${this.nodeName}_RB[label="}"]\n`;
+        ast += `node_DoWhile${this.nodeName}_WH [label="while"]\n`;
+        ast += `node_DoWhile${this.nodeName}_LP[label="("]\n`;
+        ast += `node_DoWhile${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_DoWhile${this.nodeName}_RP[label=")"]\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_DO\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_LB\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_INSTRUCTIONS_DW\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_RB\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_WH\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_DoWhile${this.nodeName}_RP\n`;
+        ast += this.condition.ast(`node_DoWhile${this.nodeName}_EXPRESION`);
         for (let i of this.instructions) {
-            ast += i.ast(newFather);
+            ast += i.ast(`node_DoWhile${this.nodeName}_INSTRUCTIONS_DW`);
         }
         return ast;
     }

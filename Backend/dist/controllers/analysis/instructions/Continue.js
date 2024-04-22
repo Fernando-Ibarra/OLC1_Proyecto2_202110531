@@ -28,13 +28,17 @@ const TypeD_1 = __importStar(require("../symbols/TypeD"));
 class Continue extends __1.Instruction {
     constructor(row, column) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         return;
     }
     ast(fatherNode) {
-        let ast = `node_Continue${this.row}_${this.column}[label="Continue"]\n`;
-        ast += `${fatherNode} -> node_Continue${this.row}_${this.column}\n`;
+        let newFather = `node_Continue${this.nodeName}`;
+        let ast = `${newFather}[label="Continue"]\n`;
+        ast += `${fatherNode} -> node_Continue${this.nodeName}\n`;
+        ast += `node_Continue${this.nodeName}_SC [label=";"]\n`;
+        ast += `${fatherNode} -> node_Continue${this.nodeName}_SC\n`;
         return ast;
     }
 }

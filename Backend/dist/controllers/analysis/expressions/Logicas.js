@@ -18,7 +18,7 @@ class Logicas extends __1.Instruction {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
         }
-        this.nameNode = `Logicas${row}_${column}`;
+        this.nameNode = `${row}_${column}`;
     }
     interpret(tree, table) {
         var _a, _b;
@@ -133,22 +133,38 @@ class Logicas extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let ast = '';
-        if (!this.uniqueOperand) {
-            ast += `node_Rela${this.nameNode} [label="${this.Logica}"]\n`;
-            ast += `nodeuniOp${this.nameNode} [label="${this.uniqueOperand}"]\n`;
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`;
-            ast += `${fatherNode} -> nodeuniOp${this.nameNode}\n`;
+        var _a, _b;
+        // HEAD
+        let newFather = `node_Logicas${this.nameNode}`;
+        let ast = `${newFather}[label="LOGICA INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        if (this.uniqueOperand != null) {
+            ast += `node_Rela_Lo${this.nameNode} [label="${this.getLogica(this.Logica)}"]\n`;
+            ast += `nodeuniOp_Lo${this.nameNode} [label="${this.uniqueOperand}"]\n`;
+            ast += `${newFather} -> node_Rela_Lo${this.nameNode}\n`;
+            ast += `${newFather} -> nodeuniOp_Lo${this.nameNode}\n`;
         }
         else {
-            ast += `nodeLeft${this.nameNode} [label="${this.leftOperand}"]\n`;
-            ast += `node_Rela${this.nameNode} [label="${this.Logica}"]\n`;
-            ast += `nodeRight${this.nameNode} [label="${this.rightOperand}"]\n`;
-            ast += `${fatherNode} -> nodeLeft${this.nameNode}\n`;
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`;
-            ast += `${fatherNode} -> nodeRight${this.nameNode}\n`;
+            ast += `nodeLeft_Lo${this.nameNode} [label="valor1"]\n`;
+            ast += `node_Rela_Lo${this.nameNode} [label="${this.getLogica(this.Logica)}"]\n`;
+            ast += `nodeRight_Lo${this.nameNode} [label="valor2"]\n`;
+            ast += `${newFather} -> nodeLeft_Lo${this.nameNode}\n`;
+            ast += `${newFather} -> node_Rela_Lo${this.nameNode}\n`;
+            ast += `${newFather} -> nodeRight_Lo${this.nameNode}\n`;
+            ast += (_a = this.leftOperand) === null || _a === void 0 ? void 0 : _a.ast(`nodeLeft_Lo${this.nameNode}`);
+            ast += (_b = this.rightOperand) === null || _b === void 0 ? void 0 : _b.ast(`nodeRight_Lo${this.nameNode}`);
         }
         return ast;
+    }
+    getLogica(loOpt) {
+        switch (loOpt) {
+            case LogicasOption.AND:
+                return "&&";
+            case LogicasOption.OR:
+                return "||";
+            case LogicasOption.NOT:
+                return "!";
+        }
     }
 }
 exports.default = Logicas;

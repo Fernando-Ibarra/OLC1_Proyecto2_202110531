@@ -33,6 +33,7 @@ class Default extends __1.Instruction {
     constructor(instructions, row, column) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.instructions = instructions;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         let newTable = new __1.SymbolTable(table);
@@ -46,10 +47,17 @@ class Default extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let ast = `node_Default${this.row}_${this.column}[label="Default"]\n`;
-        ast += `${fatherNode} -> node_Default${this.row}_${this.column}\n`;
+        let newFather = `node_Default${this.nodeName}`;
+        let ast = `${newFather}[label="DEFAULT INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_Default${this.nodeName}_DF [label="default"]\n`;
+        ast += `node_Default${this.nodeName}_SC[label=":"]\n`;
+        ast += `node_Default${this.nodeName}_INSTRUCTIONS [label="INSTRUCTIONS"]\n`;
+        ast += `${newFather} -> node_Default${this.nodeName}_DF\n`;
+        ast += `${newFather} -> node_Default${this.nodeName}_SC\n`;
+        ast += `${newFather} -> node_Default${this.nodeName}_INSTRUCTIONS\n`;
         for (let i of this.instructions) {
-            ast += i.ast(`node_Defaul${this.row}_${this.column}`);
+            ast += i.ast(`node_Default${this.nodeName}_INSTRUCTIONS`);
         }
         return ast;
     }

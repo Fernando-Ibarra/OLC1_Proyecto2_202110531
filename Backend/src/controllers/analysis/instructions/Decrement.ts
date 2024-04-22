@@ -9,7 +9,7 @@ export default class Decrement extends Instruction {
     constructor(id: string, line: number, column: number) {
         super(new TypeD(typeData.VOID), line, column)
         this.id = id[0]
-        this.nodeName = 'Decrement'
+        this.nodeName = `${this.row}_${this.column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -23,8 +23,19 @@ export default class Decrement extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = `node_${this.nodeName}${this.row}_${this.column}[label="Decrement"]\n`
-        ast += `${fatherNode} -> node_${this.nodeName}${this.row}_${this.column}\n`
+        let newFather = `node_DECREMENT${ this.nodeName }`
+        let ast = `${newFather}[label="DECREMENT INSTRUCTION"]\n`
+        ast += `${fatherNode} -> ${newFather}\n`
+
+        ast += `node_DECREMENT${this.nodeName}_ID [label="${this.id}"]\n`
+        ast += `node_DECREMENT${this.nodeName}_MINUS1 [label="-"]\n`
+        ast += `node_DECREMENT${this.nodeName}_MINUS2 [label="-"]\n`
+        ast += `node_DECREMENT${this.nodeName}_SC [label=";"]\n`
+
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_ID\n`
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_MINUS1\n`
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_MINUS2\n`
+        ast += `${newFather} -> node_DECREMENT${this.nodeName}_SC\n`
         return ast
     }
 }

@@ -1,7 +1,6 @@
 import { SymbolTable, Tree, Instruction, typeData } from '../';
 import Error from '../exceptions/Errors';
 import TypeD from '../symbols/TypeD';
-import { parse } from 'path';
 
 // TODO: Operaciones como cadena-carácter, es error semántico, a menos que se utilice toString en el carácter.
 
@@ -21,7 +20,7 @@ export default class Relacionales extends Instruction {
             this.leftOperand = leftOperand;
             this.rightOperand = rightOperand;
         }
-        this.nameNode = `Relacionales${row}_${column}`;
+        this.nameNode = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -399,23 +398,47 @@ export default class Relacionales extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let ast = '';
+        // HEAD
+        let newFather = `node_Rela${this.nameNode}`;
+        let ast = `${newFather}[label="RELACIONAL INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
         
-        if (!this.uniqueOperand) {
-            ast += `node_Rela${this.nameNode} [label="${this.relational}"]\n`
-            ast += `nodeuniOp${this.nameNode} [label="${this.uniqueOperand}"]\n`
+        if (this.uniqueOperand != null) {
+            ast += `node_Rela_Sig${this.nameNode} [label="${this.getRelacional(this.relational)}"]\n`
+            ast += `nodeuniOp_Re${this.nameNode} [label="${this.uniqueOperand}"]\n`
 
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`
-            ast += `${fatherNode} -> nodeuniOp${this.nameNode}\n`
+            ast += `${newFather} -> node_Rela_Sig${this.nameNode}\n`
+            ast += `${newFather} -> nodeuniOp_Re${this.nameNode}\n`
         } else {
-            ast += `nodeLeft${this.nameNode} [label="${this.leftOperand}"]\n`
-            ast += `node_Rela${this.nameNode} [label="${this.relational}"]\n`
-            ast += `nodeRight${this.nameNode} [label="${this.rightOperand}"]\n`
-            ast += `${fatherNode} -> nodeLeft${this.nameNode}\n`
-            ast += `${fatherNode} -> node_Rela${this.nameNode}\n`
-            ast += `${fatherNode} -> nodeRight${this.nameNode}\n`
+            ast += `nodeLeft_Re${this.nameNode} [label="valor1"]\n`
+            ast += `node_Rela_Sig${this.nameNode} [label="${this.getRelacional(this.relational)}"]\n`
+            ast += `nodeRight_Re${this.nameNode} [label="valor2"]\n`
+            ast += `${newFather} -> nodeLeft_Re${this.nameNode}\n`
+            ast += `${newFather} -> node_Rela_Sig${this.nameNode}\n`
+            ast += `${newFather} -> nodeRight_Re${this.nameNode}\n`
+            ast += this.leftOperand?.ast(`nodeLeft_Re${this.nameNode}`);
+            ast += this.rightOperand?.ast(`nodeRight_Re${this.nameNode}`);
+
         }
         return ast
+    }
+
+    getRelacional(relacional: RelationalOption): string {
+        switch (relacional) {
+            case RelationalOption.EQUALS:
+                return '==';
+            case RelationalOption.DIFFERENT:
+                return '!=';
+            case RelationalOption.LESS:
+                return '<';
+            case RelationalOption.LESS_EQUAL:
+                return '<=';
+            case RelationalOption.GREATER:
+                return '>';
+            case RelationalOption.GREATER_EQUAL:
+                return '>=';
+        }
+    
     }
 }
 

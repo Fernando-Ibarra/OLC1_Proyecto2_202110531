@@ -39,7 +39,7 @@ class For extends __1.Instruction {
         this.condition = condition;
         this.increment = increment;
         this.instructions = instructions;
-        this.nodeName = `For${row}_${column}`;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         let newTable = new __1.SymbolTable(table);
@@ -81,19 +81,36 @@ class For extends __1.Instruction {
     }
     ast(fatherNode) {
         let newFather = `node_For${this.nodeName}`;
-        let ast = `${newFather}[label="For"]\n`;
+        let ast = `${newFather}[label="FOR INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_For${this.nodeName}_1[label="Declaration"]\n`;
-        ast += `${newFather} -> node_For${this.nodeName}_1\n`;
-        ast += this.declaration.ast(`node_For${this.nodeName}_1`);
-        ast += `node_For${this.nodeName}_2[label="Condition"]\n`;
-        ast += `${newFather} -> node_For${this.nodeName}_2\n`;
-        ast += this.condition.ast(`node_For${this.nodeName}_2`);
-        ast += `node_For${this.nodeName}_3[label="Update"]\n`;
-        ast += `${newFather} -> node_For${this.nodeName}_3\n`;
-        ast += this.increment.ast(`node_For${this.nodeName}_3`);
+        // FOR - DECLARATION
+        ast += `node_For${this.nodeName}_FOR [label="for"]\n`;
+        ast += `node_For${this.nodeName}_LP[label="("]\n`;
+        ast += `node_For${this.nodeName}ASSIGN [label="DECLARATION/ASSIGN"]\n`;
+        ast += `node_For${this.nodeName}_SC1 [label=";"]\n`;
+        ast += `node_For${this.nodeName}_CONDITION [label="CONDITION"]\n`;
+        ast += `node_For${this.nodeName}_SC2 [label=";"]\n`;
+        ast += `node_For${this.nodeName}_UPDATE [label="UPDATE"]\n`;
+        ast += `node_For${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_For${this.nodeName}_LB[label="{"]\n`;
+        ast += `node_For${this.nodeName}_INSTRUCTIONS_FOR [label="INSTRUCTIONS"]\n`;
+        ast += `node_For${this.nodeName}_RB[label="}"]\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_FOR\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_For${this.nodeName}ASSIGN\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_SC1\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_CONDITION\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_SC2\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_UPDATE\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_LB\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_INSTRUCTIONS_FOR\n`;
+        ast += `${newFather} -> node_For${this.nodeName}_RB\n`;
+        ast += this.declaration.ast(`node_For${this.nodeName}ASSIGN`);
+        ast += this.condition.ast(`node_For${this.nodeName}_CONDITION`);
+        ast += this.increment.ast(`node_For${this.nodeName}_UPDATE`);
         for (let i of this.instructions) {
-            ast += i.ast(newFather);
+            ast += i.ast(`node_For${this.nodeName}_INSTRUCTIONS_FOR`);
         }
         return ast;
     }

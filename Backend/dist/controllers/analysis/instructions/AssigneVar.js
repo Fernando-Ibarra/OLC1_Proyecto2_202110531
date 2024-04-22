@@ -16,6 +16,7 @@ class AssigneVar extends __1.Instruction {
             this.id = id;
             this.expression = exp;
         }
+        this.nodeName = `${line}_${column}`;
     }
     interpret(tree, table) {
         for (let i = 0; i < this.id.length; i++) {
@@ -42,7 +43,26 @@ class AssigneVar extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        return "";
+        let newFather = `node_ASSIGN${this.nodeName}`;
+        let ast = `${newFather}[label="ASSIGN INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        ast += `node_ASSIGN${this.nodeName}_ID [label="ID"]\n`;
+        ast += `node_ASSIGN${this.nodeName}_EQ [label="="]\n`;
+        ast += `node_ASSIGN${this.nodeName}_VALUE [label="VALUE"]\n`;
+        ast += `node_ASSIGN${this.nodeName}_SC [label=";"]\n`;
+        ast += `${newFather} -> node_ASSIGN${this.nodeName}_TYPE\n`;
+        ast += `${newFather} -> node_ASSIGN${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_ASSIGN${this.nodeName}_EQ\n`;
+        ast += `${newFather} -> node_ASSIGN${this.nodeName}_VALUE\n`;
+        ast += `${newFather} -> node_ASSIGN${this.nodeName}_SC\n`;
+        for (let i of this.id) {
+            ast += `node_ASSIGN${this.nodeName}_ID${i} [label="${i}"]\n`;
+            ast += `node_ASSIGN${this.nodeName}_ID -> node_ASSIGN${this.nodeName}_ID${i}\n`;
+        }
+        if (this.expression) {
+            ast += this.expression.ast(`node_ASSIGN${this.nodeName}_VALUE`);
+        }
+        return ast;
     }
 }
 exports.default = AssigneVar;

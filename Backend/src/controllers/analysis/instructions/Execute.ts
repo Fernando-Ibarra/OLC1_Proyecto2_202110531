@@ -9,11 +9,13 @@ import Functions from './Functions';
 export default class Execute extends Instruction {
     private id: string;
     private params: Instruction[];
+    private nodeName: string;
 
     constructor(id: string[], row: number, column: number, params: Instruction[]) {
         super(new TypeD(typeData.VOID), row, column)
         this.id = id[0]
         this.params = params
+        this.nodeName = `${row}_${column}`
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -60,32 +62,32 @@ export default class Execute extends Instruction {
     }
 
     ast(fatherNode: string): string {
-        let newFather = `node_Execute${this.row}_${this.column}`;
+        let newFather = `node_Execute${this.nodeName}`;
         let ast = `${newFather}[label="EXECUTE INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
 
-        ast += `node_Execute${this.row}_${this.column}_EX [label="Execute"]\n`;
-        ast += `node_Execute${this.row}_${this.column}_ID[label="ID"]\n`;
-        ast += `node_Execute${this.row}_${this.column}_LP[label="("]\n`;
-        ast += `node_Execute${this.row}_${this.column}_PARM[label="PARAMS"]\n`;
-        ast += `node_Execute${this.row}_${this.column}_RP[label=")"]\n`;
-        ast += `node_Execute${this.row}_${this.column}_SC[label=";"]\n`;
+        ast += `node_Execute${this.nodeName}_EX [label="Execute"]\n`;
+        ast += `node_Execute${this.nodeName}_ID[label="ID"]\n`;
+        ast += `node_Execute${this.nodeName}_LP[label="("]\n`;
+        ast += `node_Execute${this.nodeName}_PARM[label="PARAMS"]\n`;
+        ast += `node_Execute${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_Execute${this.nodeName}_SC[label=";"]\n`;
 
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_EX\n`;
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_ID\n`;
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_RP\n`;
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_PARM\n`;
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_LP\n`;
-        ast += `${newFather} -> node_Execute${this.row}_${this.column}_SC\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_EX\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_ID\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_PARM\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Execute${this.nodeName}_SC\n`;
 
         for (let i of this.params) {
-            ast += `node_Execute${this.row}_${this.column}_PARM_VAL${i} [label="${this.params}"]\n`
-            ast += `node_Execute${this.row}_${this.column}_PARM -> node_Execute${this.row}_${this.column}_PARM_VAL${i}`
+            ast += `node_Execute${this.nodeName}_PARM_VAL${i} [label="${this.params}"]\n`
+            ast += `node_Execute${this.nodeName}_PARM -> node_Execute${this.nodeName}_PARM_VAL${i}`
         }
 
         
-        ast += `node_ID${this.row}_${this.column} [label="${this.id}"]\n`;        
-        ast += `node_Execute${this.row}_${this.column}_ID -> node_ID${this.row}_${this.column}\n`;
+        ast += `node_ID${this.nodeName} [label="${this.id}"]\n`;        
+        ast += `node_Execute${this.nodeName}_ID -> node_ID${this.nodeName}\n`;
         return ast
     }
 }

@@ -5,10 +5,12 @@ import TypeD from '../symbols/TypeD';
 
 export default class AccessVar extends Instruction {
     private id: string;
+    private nodeName: string;
 
     constructor(id: string, row: number, column: number) {
         super(new TypeD(typeData.VOID), row, column);
         this.id = id;
+        this.nodeName = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -20,8 +22,11 @@ export default class AccessVar extends Instruction {
         return valueVar.getValue();
     }
 
-    ast(father: string): string {
-        return ""
+    ast(fatherNode: string): string {
+        let nodeVar = `node_Var${this.nodeName}`;
+        let ast = `${ nodeVar }[label="${ this.id }"]\n`
+        ast += `${fatherNode} -> ${nodeVar}\n`
+        return ast
     }
 
 }

@@ -10,6 +10,7 @@ class AccessVar extends __1.Instruction {
     constructor(id, row, column) {
         super(new TypeD_1.default(__1.typeData.VOID), row, column);
         this.id = id;
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         let valueVar = table.getVariable(this.id);
@@ -19,8 +20,11 @@ class AccessVar extends __1.Instruction {
         this.typeData = valueVar.getType();
         return valueVar.getValue();
     }
-    ast(father) {
-        return "";
+    ast(fatherNode) {
+        let nodeVar = `node_Var${this.nodeName}`;
+        let ast = `${nodeVar}[label="${this.id}"]\n`;
+        ast += `${fatherNode} -> ${nodeVar}\n`;
+        return ast;
     }
 }
 exports.default = AccessVar;

@@ -5,7 +5,7 @@ class Nativo extends __1.Instruction {
     constructor(type, value, line, column) {
         super(type, line, column);
         this.value = value;
-        this.nameNode = `Nativo${line}_${column}`;
+        this.nameNode = `${line}_${column}`;
     }
     interpret(tree, table) {
         if (this.typeData.getTypeData() == __1.typeData.BOOL) {
@@ -18,8 +18,8 @@ class Nativo extends __1.Instruction {
         return this.value;
     }
     ast(fatherNode) {
-        let ast = `node${this.nameNode}[label="${this.value}"]\n`;
-        ast += `${fatherNode} -> node${this.nameNode}\n`;
+        let ast = `Nativo${this.nameNode}[label="${this.value}"]\n`;
+        ast += `${fatherNode} -> Nativo${this.nameNode}\n`;
         return ast;
     }
 }

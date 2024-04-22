@@ -17,7 +17,7 @@ export default class Switch extends Instruction {
         this.expression = expression;
         this.cases = cases;
         this.default = defaultCase;
-        this.nodeName = `Switch${row}_${column}`;
+        this.nodeName = `${row}_${column}`;
     }
 
     interpret(tree: Tree, table: SymbolTable) {
@@ -55,18 +55,36 @@ export default class Switch extends Instruction {
 
     ast(fatherNode: string): string {
         let newFather = `node_Switch${this.nodeName}`;
-        let ast = `${newFather}[label="Switch"]\n`;
+        let ast = `${newFather}[label="SWITCH INSTRUCTION"]\n`;
         ast += `${fatherNode} -> ${newFather}\n`;
-        ast += `node_Switch${this.nodeName}_1[label="Expression"]\n`;
-        ast += `${newFather} -> node_Switch${this.nodeName}_1\n`;
-        ast += this.expression.ast(`node_Switch${this.nodeName}_1`);
+
+        ast += `node_Switch${this.nodeName}_SWH [label="switch"]\n`;
+        ast += `node_Switch${this.nodeName}_LP[label="("]\n`;
+        ast += `node_Switch${this.nodeName}_EXPRESION [label="EXPRESION"]\n`;
+        ast += `node_Switch${this.nodeName}_RP[label=")"]\n`;
+        ast += `node_Switch${this.nodeName}_LB[label="{"]\n`;
+        ast += `node_Switch${this.nodeName}_CASES_LIST  [label="CASES_LIST"]\n`;
+        ast += `node_Switch${this.nodeName}_DEFAULT  [label="DEFAULT"]\n`;
+        ast += `node_Switch${this.nodeName}_RB[label="}"]\n`;
+
+        ast += `${newFather} -> node_Switch${this.nodeName}_SWH\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_LP\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_EXPRESION\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_RP\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_LB\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_CASES_LIST\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_DEFAULT\n`;
+        ast += `${newFather} -> node_Switch${this.nodeName}_RB\n`;
+
+        ast += this.expression.ast(`node_Switch${this.nodeName}_EXPRESION`)
+
+
         for (let i of this.cases || []) {
-            ast += i.ast(newFather);
+            ast += i.ast(`node_Switch${this.nodeName}_CASES_LIST`);
         }
-        if (this.defaultVal && !this.finished) {
-            if (this.default) {
-                ast += this.default.ast(newFather);
-            }
+
+        if (this.default) {
+            ast += this.default.ast(`node_Switch${this.nodeName}_DEFAULT`);
         }
         return ast;
     }

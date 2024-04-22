@@ -38,6 +38,7 @@ class Call extends __1.Instruction {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
         this.id = id;
         this.params = params;
+        this.nameNode = `${row}_${column}`;
     }
     interpret(tree, table) {
         let seek = tree.getFunction(this.id);
@@ -103,14 +104,23 @@ class Call extends __1.Instruction {
         }
     }
     ast(fatherNode) {
-        let ast = `node_${this.row}_${this.column}[label="Call"]\n`;
-        ast += `${fatherNode} -> node_${this.row}_${this.column}\n`;
-        ast += `node_${this.row}_${this.column}_1[label="id: ${this.id}"]\n`;
-        ast += `${fatherNode} -> node_${this.row}_${this.column}_1\n`;
-        ast += `node_${this.row}_${this.column}_2[label="params"]\n`;
-        ast += `${fatherNode} -> node_${this.row}_${this.column}_2\n`;
-        for (let i of this.params) {
-            // ast += i.ast(`node_${this.row}_${this.column}_2`)
+        // HEAD
+        let newFather = `node_Call${this.nameNode}`;
+        let ast = `${newFather}[label="CALL INSTRUCTION"]\n`;
+        ast += `${fatherNode} -> ${newFather}\n`;
+        // CALL
+        ast += `node_Call${this.nameNode}_CALL [label="${this.id}"]\n`;
+        ast += `node_Call${this.nameNode}_LP [label="("]\n`;
+        ast += `node_Call${this.nameNode}_PARM [label="PARAMS"]\n`;
+        ast += `node_Call${this.nameNode}_RP [label=")"]\n`;
+        ast += `${newFather} -> node_Call${this.nameNode}_CALL\n`;
+        ast += `${newFather} -> node_Call${this.nameNode}_LP\n`;
+        ast += `${newFather} -> node_Call${this.nameNode}_PARM\n`;
+        ast += `${newFather} -> node_Call${this.nameNode}_RP\n`;
+        if (this.params.length > 0) {
+            for (let i of this.params) {
+                ast += i.ast(`node_Call${this.nameNode}_PARM`);
+            }
         }
         return ast;
     }

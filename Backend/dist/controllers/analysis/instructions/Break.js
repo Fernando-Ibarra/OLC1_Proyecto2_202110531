@@ -28,14 +28,18 @@ const TypeD_1 = __importStar(require("../symbols/TypeD"));
 class Break extends __1.Instruction {
     constructor(row, column) {
         super(new TypeD_1.default(TypeD_1.typeData.VOID), row, column);
+        this.nodeName = `${row}_${column}`;
     }
     interpret(tree, table) {
         return;
     }
     ast(fatherNode) {
-        let ast = `node_Break${this.row}_${this.column}[label="Break"]\n`;
-        ast += `${fatherNode} -> node_Break${this.row}_${this.column}\n`;
-        return "";
+        let newFather = `node_Break${this.nodeName}`;
+        let ast = `${newFather}[label="Break"]\n`;
+        ast += `${fatherNode} -> node_Break${this.nodeName}\n`;
+        ast += `node_Break${this.nodeName}_SC [label=";"]\n`;
+        ast += `${fatherNode} -> node_Break${this.nodeName}_SC\n`;
+        return ast;
     }
 }
 exports.default = Break;
