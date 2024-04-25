@@ -46,6 +46,12 @@ export const Console = () => {
                     height="90vh"
                     width="100%"
                     theme='vs-dark'
+                    options={{
+                        readOnly: true,
+                        minimap: {
+                            enabled: false
+                        }
+                    }}
                 />
             </Grid>
 
